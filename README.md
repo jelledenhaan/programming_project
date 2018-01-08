@@ -16,9 +16,11 @@ The goal of this project, is to help people  get in touch with other coins. Furt
 
 ### Main features
 
-All visualizations will contain tooltips to view the specific number of something. Furthermore, there will be a dropdown menu in which the user will be able to select the coin they want to view. 
+So far, the project will consist of a multiline graph, a grouped barchart and a scatterplot/piechart. It could be that the latter one will be substituted for another new visualization with different characteristics. Not sure about that for now. 
 
+All visualizations will contain tooltips to view the specific number/amount of something. Furthermore, there will be a dropdown menu in which the user will be able to select the coin they want to view. 
 
+An additional option could be to implement a 'on click' listener in de grouped bar chart as well. 
 
 ## Prerequisites
 
@@ -26,10 +28,9 @@ All visualizations will contain tooltips to view the specific number of somethin
 data about coins with their characteristics:
 
 https://coinmarketcap.com/
-
 https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory/data
 
-In order to use this data, the data must be a little bit transformed with help of python. Not very much though.
+In order to use this data, the data must be a little bit transformed with help of python. The idea is to create a json file which is very user friendly when using d3.
 
 ### External components
 
@@ -37,7 +38,7 @@ include libaries, this list can be expanded throughout the project:
 
 d3-tip
 
-### Review
+### Similar visualization
 As far as I know coinmarketcap.com comes close to what I have in mind. This website is easy in use and very clear for beginners. 
 The aim is to be as clear as coinmarketcap.com and add a couple of features. Like a drop down menu in order to show the characteristics of the desired coin. There are not many visualizations on this site, so I can not get inspiration for all of my visualizations from this site. 
 
