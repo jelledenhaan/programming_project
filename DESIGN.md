@@ -5,6 +5,7 @@
 ### Data sources 
 
 https://coinmarketcap.com/
+
 https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory/data
 
 These are for now the sites that I will use to get my data. In order to use the data in combination with d3, it is needed to transform the data format a little bit. The data from kaggle is saved is a csv file. With help of my own written python script it is possible to transform the data in to a json file. Json files are easy to use when working with d3. The data from coinmarketcap is for now not that much, this data can be copied from the internet. Then this data can be transformed in to a json format manually. 
@@ -39,6 +40,8 @@ This scatterplot has also a connection with the dropdown menu. When the user sel
 #### Pie chart 
 
 There will also be a pie chart which will show the marketcap of that specific coin together with the marketcap of other coins. There will also be the amount of the total marketcap. 
+
+
 
 ### List of pluggins
 
