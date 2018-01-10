@@ -12,7 +12,8 @@ These are for now the sites that I will use to get my data. In order to use the 
 ### Diagram
 
 
-#### Description of each component
+
+### Description of each component
 
 #### Dropdown menu
 
@@ -38,5 +39,11 @@ There will also be a pie chart which will show the marketcap of that specific co
 ### List of pluggins
 
 d3tip
+
 Bootstrap will be used
-Several API's to get the current values of the coins
+
+Several API's to get the current values of the coins for example: https://api.cryptonator.com/api/full/btc-usd , https://api.cryptonator.com/api/full/xrp-usd
+
+
+
+
