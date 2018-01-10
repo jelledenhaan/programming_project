@@ -11,7 +11,11 @@ These are for now the sites that I will use to get my data. In order to use the 
 
 ### Diagram
 
+Here you can see the project purpose
 
+![](doc/sketch2.jpg)
+
+![](doc/sketch3.jpg)
 
 ### Description of each component
 
