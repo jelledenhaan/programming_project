@@ -1,0 +1,52 @@
+<!-- 
+       Jelle den Haan 
+       11975458
+       index.html
+       This is the html script which loads line.js.
+       The html page shows a grouped barchart and a line charts which are linked
+-->
+<html>
+<head>
+	<title>Programming project</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+  <script src="project.js"></script>
+</head>
+<body>
+  <div class="jumbotron jumbotron-fluid text-center">
+  <div class="container">
+    <h1>Cryptocurrencies</h1>      
+    <p>Welcome to this awesome webpage about cryptocurrencies</p>
+  </div>
+  </div>
+  <div class="dropdown">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+    Select cryptocoin
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Bitcoin</a>
+    <a class="dropdown-item" href="#">Etherium</a>
+    <a class="dropdown-item" href="#">Ripple</a>
+    <a class="dropdown-item" href="#">Litecoin</a>
+    <a class="dropdown-item" href="#">Neo</a>
+    <a class="dropdown-item" href="#">Monero</a>
+    <a class="dropdown-item" href="#">Omisego</a>
+    <a class="dropdown-item" href="#">Iota</a>
+    <a class="dropdown-item" href="#">Nem</a>
+    <a class="dropdown-item" href="#">Dash</a>
+  </div>
+  </div>
+
+  <textarea id="rawdata" style="display: none;"></textarea>
+  <h1>Line graph of historical prices of some cryptocurrencies</h1>
+    <svg width = "1400" height= "700" id= "linesvg"></svg>
+  <h1>Grouped barchart of 10 populair cryptocurrencies</h1>
+    <svg width = "1200"  height = "600" id="barsvg"></svg>
+  <h1>Scatterplot of 10 populair cryptocurrencies</h1>
+    <svg width = "1200" height = "1200" id="scattersvg"></svg>
+  <h1>Piechart to see marketcap of 10 populair cryptocurencies></h1>
+    <svg width = "600" height = "600" id="piesvg"></svg>  
+</body>
+</html>
