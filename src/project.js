@@ -6,6 +6,7 @@
 
 'use strict';
 
+var internet_data;
 
 
 $(function() {
@@ -21,11 +22,21 @@ $(function() {
 
 
  	$.getJSON('https://api.coinmarketcap.com/v1/ticker/?limit=10', function(d) {
+ 		internet_data = d;
+ 		// console.log(internet_data);
+ 		
+ 		create_scatter(internet_data)
+
+
+
+
  		// $.each(d, function(i, json) {
- 		// 	console.log(json.id);
+ 		// 	// internet_data = d;
+ 		// 	// console.log(internet_data);
  		// });	
 	});
 
+ 	// console.log(internet_data);
 
  	queue()
 	.defer(d3.json, "data_json/bitcoin.json")
@@ -44,14 +55,16 @@ $(function() {
 	// , ethereum, iota, litecoin, monero, nem, neo, omisego,ripple
  	
 	function init(error, bitcoin, dash){
-		// console.log(bitcoin);
+		
 		if (error) throw error;
 
+		create_line(dash)
 		create_line(dash)
 	};
 
 
 });
+
 
 function create_line(coin){
 
@@ -139,4 +152,133 @@ function create_line(coin){
     	.attr("d", function(d) { return line(d.values); })
     	.style("stroke", "black")
     	.style("fill", "none");	
+};
+
+
+function create_pie(coin){
+
+	
+
+};
+
+
+
+function create_scatter(coin){
+
+	
+	console.log(coin);
+
+	var svg = d3.select("#scattersvg"),
+		margin = {top: 40, right: 15, bottom: 30, left: 5},
+		width = $("#scattersvg").width() - margin.left - margin.right,
+		height = $("#scattersvg").height() - margin.top - margin.bottom,
+		g= svg.append("g")
+			.attr("class", "scatter")
+			.attr("transform", 
+				"translate(" + margin.left + "," + margin.top + ")");
+	
+
+
+	console.log(width)
+	// scaling the x and y axis
+	var x = d3.scale.log().range([0, width]);
+	var y = d3.scale.log().range([height, 0]);
+
+	// set x and y domain
+	x.domain(d3.extent(coin, function(d) {console.log(d.price_usd); return Number(d.price_usd); })).nice();
+	console.log(x(10000))
+	// y.domain(d3.extent(coin, function(d) {console.log(d.market_cap_usd); return d.market_cap_usd; })).nice();
+	y.domain([
+		d3.min(coin, function(d){ return 0.75 * d.market_cap_usd}),
+		d3.max(coin, function(d) { return 1.25 * d.market_cap_usd })]);
+
+	var color = d3.scale.category10();
+
+	var x_axis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+
+	var y_axis = d3.svg.axis()
+		.scale(y)
+		.orient("left");
+
+
+	// append g class for x axis and append text
+	svg.append('g')
+		.attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(x_axis)
+    .append('text')
+        .attr('class', 'label')
+    	.attr('x', width)
+     	.attr('y', -6)
+     	.style('text-anchor', 'end')
+      	.text("price in USDT");
+
+    // append g class for y axis and append text
+    svg.append('g')
+    	.attr('class', 'y axis')
+    	.attr('transform', 'translate(10, 10)')
+    	.call(y_axis)
+    .append('text')
+    	.attr('class', 'label')
+    	.attr('transform', 'rotate(-90)')
+    	// .attr('transform', 'translate(100, 100)')
+    	.attr('y', 10)
+    	.attr("x", -width/2)
+    	.attr('dy', '.71em')
+    	.style('text-anchor', 'end')
+    	.text("market_cap_usd");
+
+    // create tooltip 
+    var tooltip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
+	// .attr("r", function(d) { return Math.sqrt(d.population / 10000000);})
+
+	// plot circles in scatterplot with right dimensions
+	svg.selectAll(".dot")
+		.data(coin)
+	.enter().append("circle")
+	    .attr("class", "dot")
+	    .attr("r", 10)
+	    .attr("cx", function(d) { return x(d.price_usd); })
+      	.attr("cy", function(d) { return y(d.market_cap_usd); })
+      	.style("fill", function(d) { return color(d.symbol); })
+      	.on("mouseover", function(d) {
+        	tooltip.transition()
+            	.duration(200)
+            	.style("opacity", .9)
+            tooltip.html(d.symbol)
+            	.style("left", (d3.event.pageX + 5) + "px")
+            	.style("top", (d3.event.pageY - 28) + "px");
+		})
+		.on("mouseout", function(d) {
+		    tooltip.transition()
+            	.duration(500)
+            	.style("opacity", 0);
+		});	 	
+								
+	// append legend to svg 
+	var legend = svg.selectAll(".legend")
+				.data(color.domain())
+			.enter().append("g")
+			    .attr("class", "legend")
+			    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+	legend.append("rect")
+		.attr("x", width - 17)
+		.attr("y", 44)
+		.attr("width", 17)
+		.attr("height", 17)
+		.style("fill", color);
+
+	legend.append("text")
+		.attr("x", width - 24)
+		.attr("y", 50)
+		.attr("dy", ".35em")
+		.style("text-anchor", "end")
+		.text(function(d) { return d; });	
+
 };
