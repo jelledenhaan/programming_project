@@ -7,6 +7,7 @@
 'use strict';
 
 var internet_data;
+var total_cap = 0;
 
 
 $(function() {
@@ -22,18 +23,27 @@ $(function() {
 
 
  	$.getJSON('https://api.coinmarketcap.com/v1/ticker/?limit=10', function(d) {
+ 		
+
+ 		$.each(d, function(i, json) {
+ 			// internet_data = d;
+ 			// console.log(json.market_cap_usd);
+ 			total_cap = total_cap + Number(json.market_cap_usd)
+ 			
+ 			
+ 		});	
+ 		console.log(total_cap);
+
  		internet_data = d;
  		// console.log(internet_data);
  		
  		create_scatter(internet_data)
+ 		// create_pie(internet_data, total_cap)
 
 
 
 
- 		// $.each(d, function(i, json) {
- 		// 	// internet_data = d;
- 		// 	// console.log(internet_data);
- 		// });	
+ 		
 	});
 
  	// console.log(internet_data);
@@ -155,18 +165,53 @@ function create_line(coin){
 };
 
 
-function create_pie(coin){
+function create_pie(coin, total_cap){
 
+	var width = $("#donutsvg").width(),
+		height = $("#donutsvg").height(),
+		radius = Math.min(width, height) / 2;
+
+	var color = d3.scale.ordinal()
+    	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#0000FF", "#7FFF00", "#B8860B"]);
 	
+	var arc = d3.svg.arc()
+		.outerRadius(radius -10)
+		.innerRadius(radius - 70);
 
-};
+	var pie = d3.layout.pie()
+		.sort(null)
+		.value(function(d) { return d.undefined;});
+
+	var svg = d3.select("body").append("svg")
+    	.attr("width", width)
+    	.attr("height", height)
+  	.append("g")
+    	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    d3.csv("data.csv", type, function(error, data) {
+  		if (error) throw error;
+
+  	var g = svg.selectAll(".arc")
+    	.data(pie(data))
+    	.enter().append("g")
+      	.attr("class", "arc");
+
+  	g.append("path")
+    	.attr("d", arc)
+      	.style("fill", function(d) { return color(d.data.age); });
+
+  	g.append("text")
+    	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      	.attr("dy", ".35em")
+      	.text(function(d) { return d.data.age; });
+});
+
+
+
 
 
 
 function create_scatter(coin){
-
-	
-	console.log(coin);
 
 	var svg = d3.select("#scattersvg"),
 		margin = {top: 40, right: 15, bottom: 30, left: 5},
@@ -179,14 +224,12 @@ function create_scatter(coin){
 	
 
 
-	console.log(width)
 	// scaling the x and y axis
 	var x = d3.scale.log().range([0, width]);
 	var y = d3.scale.log().range([height, 0]);
 
 	// set x and y domain
-	x.domain(d3.extent(coin, function(d) {console.log(d.price_usd); return Number(d.price_usd); })).nice();
-	console.log(x(10000))
+	x.domain(d3.extent(coin, function(d) { return Number(d.price_usd); })).nice();
 	// y.domain(d3.extent(coin, function(d) {console.log(d.market_cap_usd); return d.market_cap_usd; })).nice();
 	y.domain([
 		d3.min(coin, function(d){ return 0.75 * d.market_cap_usd}),
