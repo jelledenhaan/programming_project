@@ -85,7 +85,8 @@ function create_line(coin){
     var data = coin;
     var low_price = [];
 	var high_price = [];
-	
+	var volume = [];
+	var marketcap =[];
 
 	// push date to right list
 	data.forEach(function(d){ 
@@ -171,9 +172,10 @@ function create_donut(coin, total_cap){
 		height = $("#donutsvg").height(),
 		radius = Math.min(width, height) / 2;
 
-	var color = d3.scale.ordinal()
-    	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#0000FF", "#7FFF00", "#B8860B"]);
-	
+	// var color = d3.scale.ordinal()
+ //    	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#0000FF", "#7FFF00", "#B8860B"]);
+	var color = d3.scale.category10();
+
 	var arc = d3.svg.arc()
 		.outerRadius(radius - 10)
 		.innerRadius(radius - 70);
@@ -212,7 +214,7 @@ function create_donut(coin, total_cap){
 function create_scatter(coin){
 
 	var svg = d3.select("#scattersvg"),
-		margin = {top: 40, right: 15, bottom: 30, left: 5},
+		margin = {top: 40, right: 15, bottom: 30, left: 70},
 		width = $("#scattersvg").width() - margin.left - margin.right,
 		height = $("#scattersvg").height() - margin.top - margin.bottom,
 		g= svg.append("g")

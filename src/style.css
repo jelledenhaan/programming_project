@@ -2,23 +2,48 @@ body {
 	padding: 5px;
 }
 
-.axis path,
-.axis line {
-  fill: black;
-  stroke: #000;
+#linesvg path {
+  stroke: black;
   stroke-width: 1;
+  fill: none;
+}
+#linesvg .axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5;
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
+#linesvg .x.axis path {
   display: black;
 }
 
-.arc text {
+#scattersvg .axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5;
+  shape-rendering: crispEdges;
+}
+
+#scattersvg .dot {
+  stroke: #000;
+}
+#scattersvg .tooltip {
+  position: absolute;
+  width: 200px;
+  height: 20px;
+  pointer-events: none;
+}
+
+
+
+#donutsvg .arc text {
   font: 10px sans-serif;
   text-anchor: middle;
 }
 
-.arc path {
+#donutsvg .arc path {
   stroke: #fff;
 }
