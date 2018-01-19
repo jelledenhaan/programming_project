@@ -2,15 +2,23 @@ body {
 	padding: 5px;
 }
 
-#linesvg .axis path,
-#linesvg.axis line {
+.axis path,
+.axis line {
   fill: black;
-  stroke: black;
+  stroke: #000;
   stroke-width: 1;
   shape-rendering: crispEdges;
 }
 
-/*.x.axis path {
-  display: red;
+.x.axis path {
+  display: black;
 }
-*/
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
