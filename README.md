@@ -37,6 +37,8 @@ In order to use this data, the data must be a little bit transformed with help o
 include libaries, this list can be expanded throughout the project:
 
 d3-tip
+Bootstrap
+Jquery
 
 ### Similar visualization
 As far as I know coinmarketcap.com comes close to what I have in mind. This website is easy in use and very clear for beginners. 

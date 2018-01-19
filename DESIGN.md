@@ -37,9 +37,9 @@ In this grouped barchart a couple of characteristics of the coins can be found. 
 
 This scatterplot has also a connection with the dropdown menu. When the user selects a coin, this coin will be shown in the scatterplot. The user can manually change the x and y variables. The variables will also be: coin supply, marketcap, volume and maybe more variables. 
 
-#### Pie chart 
+#### Donut chart 
 
-There will also be a pie chart which will show the marketcap of that specific coin together with the marketcap of other coins. There will also be the amount of the total marketcap. 
+There will also be a donut chart which will show the marketcap of that specific coin together with the marketcap of other coins. There will also be the amount of the total marketcap. 
 
 
 
@@ -47,9 +47,11 @@ There will also be a pie chart which will show the marketcap of that specific co
 
 d3tip
 
-Bootstrap will be used
+Bootstrap 
 
-Several API's to get the current values of the coins for example: https://api.cryptonator.com/api/full/btc-usd , https://api.cryptonator.com/api/full/xrp-usd
+Jquery
+
+Several API's to get the current values of the coins for example: https://api.coinmarketcap.com/v1/ticker/?limit=10
 
 
 

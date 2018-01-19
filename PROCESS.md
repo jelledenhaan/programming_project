@@ -10,3 +10,9 @@ Today I did not do very much work due to illness. I decided to leave school earl
 
 # day 3 
 Today I have work on my scatterplot, the basics of this scatterplot are almost finished. The only thing that needs to be done is the y-axis which is a little bit difficult. The scatterplot also needs to be styled nicely. The styling of the graphs is a task that I will do this weekend. 
+
+# day 4
+This day I started with my donut chart, I wrote some code but the data was not shown in the donut chart. There was some kind of error where my data was undefined. The donut chart is not finished yet but the basics of the code are already there. 
+
+# day 5
+I continued with the donut chart and finally I managed to figure out what the problem with my data was. The donut chart can now be seen on the website.The style of the donut chart is far from finished and the lay out could be better. As I already said before, this weekend I will try to focus on the style of the graphs. 
