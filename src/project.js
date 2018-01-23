@@ -40,10 +40,14 @@ $(function() {
  		create_scatter(internet_data)
  		create_donut(internet_data, total_cap)
 
- 		$function(){
+ 		$(function(){
 
- 			$(".dropdown-menu").on("click", "")
- 		}
+ 			$(".dropdown-item").click(function() {
+ 				console.log($(this).attr("name"));
+
+
+ 			})
+ 		});
 
 
  		
@@ -223,7 +227,7 @@ function create_scatter(coin){
 		margin = {top: 40, right: 35, bottom: 30, left: 60},
 		width = $("#scattersvg").width() - margin.left - margin.right,
 		height = $("#scattersvg").height() - margin.top - margin.bottom,
-		g= svg.append("g")
+		g = svg.append("g")
 			.attr("class", "scatter")
 			.attr("transform", 
 				"translate(" + margin.left + "," + margin.top + ")");
@@ -302,7 +306,7 @@ function create_scatter(coin){
         	tooltip.transition()
             	.duration(200)
             	.style("opacity", .9)
-            tooltip.html(d.symbol + "<br>" +d.price_usd + "<br>" +d.market_cap_usd)
+            tooltip.html(d.name + "<br>" +d.price_usd + "<br>" +d.market_cap_usd)
             	.style("display", "inline-block")
             	.style("left", (d3.event.pageX + 20) + "px")
             	.style("top", (d3.event.pageY - 28) + "px");
@@ -334,5 +338,13 @@ function create_scatter(coin){
 		.attr("dy", ".35em")
 		.style("text-anchor", "end")
 		.text(function(d) { return d; });	
+
+};
+
+function update_scatter(coin) {
+
+
+
+
 
 };
