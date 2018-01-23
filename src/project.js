@@ -22,7 +22,7 @@ $(function() {
  //    }
 
 
- 	$.getJSON('https://api.coinmarketcap.com/v1/ticker/?limit=10', function(d) {
+ 	$.getJSON('https://api.coinmarketcap.com/v1/ticker/?limit=20', function(d) {
  		
 
  		$.each(d, function(i, json) {
@@ -32,7 +32,7 @@ $(function() {
  			
  			
  		});	
- 		// console.log(total_cap);
+ 		
 
  		internet_data = d;
  		// console.log(internet_data);
@@ -40,7 +40,10 @@ $(function() {
  		create_scatter(internet_data)
  		create_donut(internet_data, total_cap)
 
+ 		$function(){
 
+ 			$(".dropdown-menu").on("click", "")
+ 		}
 
 
  		
@@ -69,7 +72,7 @@ $(function() {
 		if (error) throw error;
 
 		create_line(dash)
-		create_line(dash)
+
 	};
 
 
@@ -86,7 +89,7 @@ function create_line(coin){
     var low_price = [];
 	var high_price = [];
 	var volume = [];
-	var marketcap =[];
+	var market_cap =[];
 
 	// push date to right list
 	data.forEach(function(d){ 
@@ -94,16 +97,18 @@ function create_line(coin){
 		// console.log(date);
 		low_price.push({date: date, price: d.low});
 		high_price.push({date: date, price: d.high});
+		market_cap.push({date: date, price: d.market_cap})
+		volume.push({date: date, price: d.volume})
 		});
 
 	// save data in right form
-	var good_data = [{id: "low", values: low_price }, {id: "high", values: high_price }];
+	var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
 
 	// variables for parameters of graph
 	var svg = d3.select("#linesvg"),
 	margin = {top: 40, right: 20, bottom: 130, left: 50},
-		width = 1200 - margin.left - margin.right,
-		height = 500 - margin.top - margin.bottom,
+		width = $("#linesvg").width() - margin.left - margin.right,
+		height = $("#linesvg").height() - margin.top - margin.bottom,
 		g= svg.append("g")
 			.attr("class", "graph")
 			.attr("transform", 
@@ -115,10 +120,10 @@ function create_line(coin){
 	var z = d3.scale.ordinal(d3.schemeCategory10);
 
 	// set the domains of x and y axis  
-	x.domain(d3.extent(low_price, function(d) { return d.date } ));
+	x.domain(d3.extent(volume, function(d) { return d.date } ));
 	y.domain([
 		d3.min(low_price, function(d){ return 0.75 * d.price}),
-		d3.max(high_price, function(d) { return 1.25 * d.price })]);
+		d3.max(volume, function(d) { return 1.25 * d.price })]);
 
 	// define and create x axis
 	var x_axis = d3.svg.axis().scale(x)
@@ -146,7 +151,7 @@ function create_line(coin){
 
 
 	z.domain(good_data.map(function(d) { return d.id; }));
-
+	// console.log(z.domain(good_data.map(function(d) { return d.id; })));
 	// // variables to draw lines 
   	var line = d3.svg.line()
 	    .x(function(d) { return x(d.date); })
@@ -161,20 +166,21 @@ function create_line(coin){
     point.append("path")
     	.attr("class", "line")
     	.attr("d", function(d) { return line(d.values); })
-    	.style("stroke", "black")
-    	.style("fill", "none");	
+    	.style("stroke", function(d) { return z(d.id); });
+    	// .style("fill", "none");	
+    
 };
 
 
 function create_donut(coin, total_cap){
-
+	
 	var width = $("#donutsvg").width(),
 		height = $("#donutsvg").height(),
 		radius = Math.min(width, height) / 2;
 
 	// var color = d3.scale.ordinal()
  //    	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#0000FF", "#7FFF00", "#B8860B"]);
-	var color = d3.scale.category10();
+	var color = d3.scale.category20();
 
 	var arc = d3.svg.arc()
 		.outerRadius(radius - 10)
@@ -214,7 +220,7 @@ function create_donut(coin, total_cap){
 function create_scatter(coin){
 
 	var svg = d3.select("#scattersvg"),
-		margin = {top: 40, right: 15, bottom: 30, left: 70},
+		margin = {top: 40, right: 35, bottom: 30, left: 60},
 		width = $("#scattersvg").width() - margin.left - margin.right,
 		height = $("#scattersvg").height() - margin.top - margin.bottom,
 		g= svg.append("g")
@@ -235,7 +241,8 @@ function create_scatter(coin){
 		d3.min(coin, function(d){ return 0.75 * d.market_cap_usd}),
 		d3.max(coin, function(d) { return 1.25 * d.market_cap_usd })]);
 
-	var color = d3.scale.category10();
+	var color = d3.scale.category20();
+	console.log(color);
 
 	var x_axis = d3.svg.axis()
 		.scale(x)
@@ -247,19 +254,20 @@ function create_scatter(coin){
 
 
 	// append g class for x axis and append text
-	svg.append('g')
+	g.append('g')
 		.attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(x_axis)
     .append('text')
         .attr('class', 'label')
-    	.attr('x', width)
-     	.attr('y', -6)
+    	.attr('x', width-10)
+     	.attr('y', -7)
      	.style('text-anchor', 'end')
-      	.text("price in USDT");
+     	.style("font-weight", "bold")
+      	.text("price in USD");
 
     // append g class for y axis and append text
-    svg.append('g')
+    g.append('g')
     	.attr('class', 'y axis')
     	.attr('transform', 'translate(10, 10)')
     	.call(y_axis)
@@ -268,10 +276,11 @@ function create_scatter(coin){
     	.attr('transform', 'rotate(-90)')
     	// .attr('transform', 'translate(100, 100)')
     	.attr('y', 10)
-    	.attr("x", -width/2)
+    	.attr("x", -50)
     	.attr('dy', '.71em')
     	.style('text-anchor', 'end')
-    	.text("market_cap_usd");
+    	.style("font-weight", "bold")
+    	.text("market cap in USD");
 
     // create tooltip 
     var tooltip = d3.select("body").append("div")
@@ -281,7 +290,7 @@ function create_scatter(coin){
 	// .attr("r", function(d) { return Math.sqrt(d.population / 10000000);})
 
 	// plot circles in scatterplot with right dimensions
-	svg.selectAll(".dot")
+	g.selectAll(".dot")
 		.data(coin)
 	.enter().append("circle")
 	    .attr("class", "dot")
@@ -293,8 +302,9 @@ function create_scatter(coin){
         	tooltip.transition()
             	.duration(200)
             	.style("opacity", .9)
-            tooltip.html(d.symbol)
-            	.style("left", (d3.event.pageX + 5) + "px")
+            tooltip.html(d.symbol + "<br>" +d.price_usd + "<br>" +d.market_cap_usd)
+            	.style("display", "inline-block")
+            	.style("left", (d3.event.pageX + 20) + "px")
             	.style("top", (d3.event.pageY - 28) + "px");
 		})
 		.on("mouseout", function(d) {
@@ -302,7 +312,8 @@ function create_scatter(coin){
             	.duration(500)
             	.style("opacity", 0);
 		});	 	
-								
+						
+	console.log(color.domain());							
 	// append legend to svg 
 	var legend = svg.selectAll(".legend")
 				.data(color.domain())
