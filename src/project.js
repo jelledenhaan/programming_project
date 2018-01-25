@@ -7,7 +7,7 @@
 'use strict';
 
 var internet_data;
-var total_cap = 0;
+var total_cap;
 var top_button= 20;
 var coinData;
 
@@ -31,6 +31,8 @@ var widthDonut,
 	radiusDonut,
 	colorDonut,
 	tooltipDonut,
+	arcDonut,
+	pieDonut,
 	svgDonut;
 $(function() {
 
@@ -49,7 +51,7 @@ $(function() {
  		// console.log(internet_data);
  		
  		create_scatter()
- 		create_donut(coinData, total_cap)
+ 		create_donut()
 
  		
 
@@ -57,7 +59,7 @@ $(function() {
  				
  				topSelect = Number($(this).attr("name"));
  				updatescatterPlot();
-
+ 				updateDonut();
  				
 
 
@@ -206,20 +208,18 @@ function create_line(coin){
 };
 
 
-function create_donut(coinData, total_cap){
+function create_donut(){
 
 	widthDonut = $("#donutsvg").width();
 	heightDonut = $("#donutsvg").height();
 	radiusDonut = Math.min(widthDonut, heightDonut) / 2;
 
-	// var color = d3.scale.ordinal()
- //    	.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#0000FF", "#7FFF00", "#B8860B"]);
 	colorDonut = d3.scale.category20();
 
-	 // // create tooltip 
-  //   tooltipDonut = d3.select("body").append("div")
-		// .attr("class", "tooltip")
-		// .style("opacity", 0);
+	 // create tooltip 
+    tooltipDonut = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
 
 	var svg = d3.select("#donutsvg")
     	.attr("width", widthDonut)
@@ -227,39 +227,40 @@ function create_donut(coinData, total_cap){
   	.append("g")
     	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
 
-    var arc = d3.svg.arc()
+    arcDonut = d3.svg.arc()
 		.outerRadius(radiusDonut - 10)
 		.innerRadius(radiusDonut - 70);
 
-	var pie = d3.layout.pie()
+	pieDonut = d3.layout.pie()
 		.sort(null)
 		.value(function(d) { return d.market_cap_usd;});
 
-    
-  	svgDonut = svg.selectAll(".arc")
-    	.data(pie(coinData))
-    	.enter().append("g")
-      	.attr("class", "arc");
+  //   // vanaf hier in update functie?
+  // svgDonut = svg.selectAll(".arc")
+  //   	.data(pieDonut(coinData))
+  //   	.enter()
+  //   	.append("g")
+  //     	.attr("class", "arc");
 
-  	svgDonut.append("path")
-    	.attr("d", arc)
-      	.style("fill", function(d) { return colorDonut(d.data.symbol); })
-      	.on("mouseover", function(d) {
-        	tooltipDonut.transition()
-            	.duration(200)
-            	.style("opacity", .9)
-            tooltipDonut.html(d.data.symbol+ " " + "<br>" +d.data.market_cap_usd)
-            	.style("display", "inline-block")
-            	.style("left", (d3.event.pageX + 20) + "px")
-            	.style("top", (d3.event.pageY - 28) + "px");
-		})
-		.on("mouseout", function(d) {
-		    tooltipDonut.transition()
-            	.duration(500)
-            	.style("opacity", 0);
-		});
+  // 	svgDonut.append("path")
+  //   	.attr("d", arcDonut)
+  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
+  //     	.on("mouseover", function(d) {
+  //       	tooltipDonut.transition()
+  //           	.duration(200)
+  //           	.style("opacity", .9)
+  //           tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+  //           	.style("display", "inline-block")
+  //           	.style("left", (d3.event.pageX + 20) + "px")
+  //           	.style("top", (d3.event.pageY - 28) + "px");
+		// })
+		// .on("mouseout", function(d) {
+		//     tooltipDonut.transition()
+  //           	.duration(500)
+  //           	.style("opacity", 0);
+		// });
 
-
+	updateDonut();
   	// svgScatter.append("text")
    //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
    //    	.attr("dy", ".35em")
@@ -275,18 +276,83 @@ function updateDonut(){
 		newCoinData.push(coinData[i]);
 
 	}
-
-
-
-
-
+	console.log(newCoinData);
 	// // create tooltip 
   //tooltipDonut = d3.select("body").append("div")
 		// .attr("class", "tooltip")
 		// .style("opacity", 0);
+	
+
+    svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
+    	.attr("height", heightDonut)
+  	.append("g")
+    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
+    
+    var pieces = svgDonut.selectAll(".arc")
+    	.data(pieDonut(newCoinData));
+
+    pieces.exit().remove()
+    	.transition()
+    	.duration(750);
 
 
-}
+  	pieces.enter().append("path")
+    	.attr("d", arcDonut)
+    	.style("fill", "#ffffff")
+    	.transition()
+    	.duration(1500)
+      	.style("fill", function(d) { return colorDonut(d.data.symbol); });
+      	
+      pieces.on("mouseover", function(d) {
+        	tooltipDonut.transition()
+            	.duration(200)
+            	.style("opacity", .9)
+            tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+            	.style("display", "inline-block")
+            	.style("left", (d3.event.pageX + 20) + "px")
+            	.style("top", (d3.event.pageY - 28) + "px");
+		})
+		.on("mouseout", function(d) {
+		    tooltipDonut.transition()
+            	.duration(500)
+            	.style("opacity", 0);
+		});
+
+
+  // 	var pieces = svgDonut.selectAll(".arc")
+  //   	.data(pieDonut(newCoinData));
+
+  //   pieces.exit().remove()
+  //   	.transition()
+  //   	.duration(750);
+
+  // 	pieces.enter().append("path")
+  //   	.attr("d", arcDonut)
+  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
+      	
+  //   pieces.on("mouseover", function(d) {
+  //   	tooltipDonut.transition()
+  //       .duration(200)
+  //           .style("opacity", .9)
+  //       tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+  //           .style("display", "inline-block")
+  //           .style("left", (d3.event.pageX + 20) + "px")
+  //           .style("top", (d3.event.pageY - 28) + "px");
+		// })
+		// .on("mouseout", function(d) {
+		//     tooltipDonut.transition()
+  //           	.duration(500)
+  //           	.style("opacity", 0);
+		// });
+
+
+  	// svgScatter.append("text")
+   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+   //    	.attr("dy", ".35em")
+   //    	.text(function(d) { return d.data.symbol; });
+
+
+};
 
 
 function create_scatter(){
@@ -389,7 +455,7 @@ function updatescatterPlot() {
 	circles
 		.transition()
 		.duration(800)
-		.attr("cx", function(d) {console.log("hoi", +d[xvariableScatter]); return xScatter(+d[xvariableScatter]); })
+		.attr("cx", function(d) { return xScatter(+d[xvariableScatter]); })
       	.attr("cy", function(d) { return yScatter(+d[yvariableScatter]); })
       	.style("fill", function(d) { return colorScatter(d.symbol); });
 
