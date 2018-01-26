@@ -11,6 +11,16 @@ var total_cap;
 var top_button= 20;
 var coinData;
 
+// variables line chart
+var widthLine,
+	heightLine,
+	svgLine,
+	xLine,
+	yLine,
+	zLine;
+var lineData;
+
+// variables scatterplot
 var xScatter,
 	yScatter,
 	colorScatter,
@@ -26,6 +36,7 @@ var topSelect = 20;
 var tooltipScatter; 
 
 
+// variables donutchart
 var widthDonut,		
 	heightDonut,
 	radiusDonut,
@@ -48,8 +59,7 @@ $(function() {
  		
 
  		coinData = d;
- 		// console.log(internet_data);
- 		
+ 		 		
  		create_scatter()
  		create_donut()
 
@@ -59,30 +69,34 @@ $(function() {
  				
  				topSelect = Number($(this).attr("name"));
  				updatescatterPlot();
- 				updateDonut();
- 				
-
+ 				updateDonut();	
 
  			})
+ 			
  			$(".x-axis-btn").click(function() {
  				
  				xvariableScatter = $(this).attr("name");
 
  				updatescatterPlot();
 
- 				
-
 
  			})
+ 			
  			$(".y-axis-btn").click(function() {
  				
  				yvariableScatter = $(this).attr("name");
  				updatescatterPlot();
 
- 				
+ 			})
 
+ 			$(".currency").click(function() {
+ 				
+ 				 console.log($(this).attr("name"));
+ 				updateLine(lineData[+$(this).attr('name')])
 
  			})
+
+
 
 	});
 
@@ -105,9 +119,13 @@ $(function() {
  	
 	function init(error, bitcoin, dash, ethereum, iota, litecoin, monero, nem, neo, omisego,ripple){
 		
+		
 		if (error) throw error;
 
-		create_line(dash)
+		lineData=[bitcoin, dash, ethereum, iota, litecoin, monero, nem, neo, omisego,ripple];
+
+		create_line(lineData[1]);
+		updateLine(lineData[1]);
 
 	};
 
@@ -116,6 +134,103 @@ $(function() {
 
 
 function create_line(coin){
+
+	// variables for parameters of graph
+	var svg = d3.select("#linesvg"),
+	margin = {top: 40, right: 20, bottom: 130, left: 50};
+
+	widthLine = $("#linesvg").width() - margin.left - margin.right,
+	heightLine = $("#linesvg").height() - margin.top - margin.bottom,
+	svgLine = svg.append("g")
+		.attr("class", "graph")
+		.attr("transform", 
+			"translate(" + margin.left + "," + margin.top + ")");
+
+	// var parseDate = d3.time.format("%Y/%m/%d").parse
+
+	// // first make sure that the data is in the right form 
+ //    // variables to store data
+ //    var data = coin;
+ //    var low_price = [];
+	// var high_price = [];
+	// var volume = [];
+	// var market_cap =[];
+
+	// // push date to right list
+	// data.forEach(function(d){ 
+	// 	var date = parseDate(d.date);
+	// 	// console.log(date);
+	// 	low_price.push({date: date, price: d.low});
+	// 	high_price.push({date: date, price: d.high});
+	// 	market_cap.push({date: date, price: d.market_cap})
+	// 	volume.push({date: date, price: d.volume})
+	// 	});
+
+	// // save data in right form
+	// var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
+
+	
+	// // scaling the x-axis 
+	// xLine = d3.time.scale().range([0, widthLine]);
+	// yLine = d3.scale.log().range([heightLine, 0]);
+	// zLine = d3.scale.category20();
+
+	// set the domains of x and y axis  
+	// xLine.domain(d3.extent(volume, function(d) { return d.date } ));
+	// yLine.domain([
+	// 	d3.min(low_price, function(d){ return 0.75 * d.price}),
+	// 	d3.max(volume, function(d) { return 1.25 * d.price })]);
+
+
+	// define and create x axis
+	// var x_axis = d3.svg.axis().scale(xLine)
+	// 	.orient("bottom");
+	// 	// .ticks(17)
+	// 	// .tickFormat(function(d){ return d;});
+
+	// // define and create y axis
+	// var y_axis = d3.svg.axis().scale(yLine)
+	// 	.orient("left");
+	// 	// .ticks(15);
+
+	// append x axis to g element
+	svgLine.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + heightLine + ")");
+		// .call(x_axis);
+
+	// append y axis to g element
+	svgLine.append("g")
+		.attr("class", "y axis")
+		.attr("transform", "translate(0," + heightLine + ")")
+		.attr("transform", "rotate(-0)");
+		// .call(y_axis);		
+
+
+	// zLine.domain([good_data[0].id, good_data[1].id]);
+	// // console.log(z.domain(good_data.map(function(d) { return d.id; })));
+	// // // variables to draw lines 
+ //  	var line = d3.svg.line()
+	//     .x(function(d) { return xLine(d.date); })
+	//     .y(function(d) { return yLine(d.price); });
+
+ // 	var point= svgLine.selectAll(".point")
+	// 	.data(good_data)
+	// 	.enter().append("g")
+	// 		.attr("class", "point" );
+
+	// // draw lines 
+ //    point.append("path")
+ //    	.attr("class", "line")
+ //    	.attr("d", function(d) { return line(d.values); })
+ //    	.style("stroke", function(d) { return zLine(d.id); });	
+
+ 	// updateLine(coin);
+    
+};
+
+function updateLine(coin){
+
 
 	var parseDate = d3.time.format("%Y/%m/%d").parse
 
@@ -126,7 +241,7 @@ function create_line(coin){
 	var high_price = [];
 	var volume = [];
 	var market_cap =[];
-
+	
 	// push date to right list
 	data.forEach(function(d){ 
 		var date = parseDate(d.date);
@@ -140,61 +255,35 @@ function create_line(coin){
 	// save data in right form
 	var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
 
-	// variables for parameters of graph
-	var svg = d3.select("#linesvg"),
-	margin = {top: 40, right: 20, bottom: 130, left: 50},
-		width = $("#linesvg").width() - margin.left - margin.right,
-		height = $("#linesvg").height() - margin.top - margin.bottom,
-		g= svg.append("g")
-			.attr("class", "graph")
-			.attr("transform", 
-				"translate(" + margin.left + "," + margin.top + ")");
-
 	// scaling the x-axis 
-	var x = d3.time.scale().range([0, width]);
-	var y = d3.scale.log().range([height, 0]);
-	var z = d3.scale.category20();
+	xLine = d3.time.scale().range([0, widthLine]);
+	yLine = d3.scale.log().range([heightLine, 0]);
+	zLine = d3.scale.category20();
 
-	// set the domains of x and y axis  
-	x.domain(d3.extent(volume, function(d) { return d.date } ));
-	y.domain([
+	xLine.domain(d3.extent(low_price, function(d) { return d.date } ));
+	yLine.domain([
 		d3.min(low_price, function(d){ return 0.75 * d.price}),
 		d3.max(volume, function(d) { return 1.25 * d.price })]);
 
+	svgLine.select(".x")
+		.transition()
+		.duration(800)
+		.call(d3.svg.axis().scale(xLine).orient("bottom"));
 
-	// define and create x axis
-	var x_axis = d3.svg.axis().scale(x)
-		.orient("bottom");
-		// .ticks(17)
-		// .tickFormat(function(d){ return d;});
+	svgLine.select(".y")
+		.transition()
+		.duration(800)
+		.call(d3.svg.axis().scale(yLine).orient("left"));
 
-	// define and create y axis
-	var y_axis = d3.svg.axis().scale(y)
-		.orient("left");
-		// .ticks(15);
-
-	// append x axis to g element
-	g.append("g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
-		.call(x_axis);
-
-	// append y axis to g element
-	g.append("g")
-		.attr("class", "y axis")
-		.attr("transform", "translate(0," + height + ")")
-		.attr("transform", "rotate(-0)")
-		.call(y_axis);		
+	zLine.domain([good_data[0].id, good_data[1].id]);
 
 
-	z.domain([good_data[0].id, good_data[1].id]);
-	// console.log(z.domain(good_data.map(function(d) { return d.id; })));
 	// // variables to draw lines 
   	var line = d3.svg.line()
-	    .x(function(d) { return x(d.date); })
-	    .y(function(d) { return y(d.price); });
+	    .x(function(d) { return xLine(d.date); })
+	    .y(function(d) { return yLine(d.price); });
 
- 	var point= g.selectAll(".point")
+ 	var point= svgLine.selectAll(".point")
 		.data(good_data)
 		.enter().append("g")
 			.attr("class", "point" );
@@ -203,157 +292,10 @@ function create_line(coin){
     point.append("path")
     	.attr("class", "line")
     	.attr("d", function(d) { return line(d.values); })
-    	.style("stroke", function(d) { return z(d.id); });	
-    
-};
-
-
-function create_donut(){
-
-	widthDonut = $("#donutsvg").width();
-	heightDonut = $("#donutsvg").height();
-	radiusDonut = Math.min(widthDonut, heightDonut) / 2;
-
-	colorDonut = d3.scale.category20();
-
-	 // create tooltip 
-    tooltipDonut = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-
-	var svg = d3.select("#donutsvg")
-    	.attr("width", widthDonut)
-    	.attr("height", heightDonut)
-  	.append("g")
-    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
-
-    arcDonut = d3.svg.arc()
-		.outerRadius(radiusDonut - 10)
-		.innerRadius(radiusDonut - 70);
-
-	pieDonut = d3.layout.pie()
-		.sort(null)
-		.value(function(d) { return d.market_cap_usd;});
-
-  //   // vanaf hier in update functie?
-  // svgDonut = svg.selectAll(".arc")
-  //   	.data(pieDonut(coinData))
-  //   	.enter()
-  //   	.append("g")
-  //     	.attr("class", "arc");
-
-  // 	svgDonut.append("path")
-  //   	.attr("d", arcDonut)
-  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
-  //     	.on("mouseover", function(d) {
-  //       	tooltipDonut.transition()
-  //           	.duration(200)
-  //           	.style("opacity", .9)
-  //           tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
-  //           	.style("display", "inline-block")
-  //           	.style("left", (d3.event.pageX + 20) + "px")
-  //           	.style("top", (d3.event.pageY - 28) + "px");
-		// })
-		// .on("mouseout", function(d) {
-		//     tooltipDonut.transition()
-  //           	.duration(500)
-  //           	.style("opacity", 0);
-		// });
-
-	updateDonut();
-  	// svgScatter.append("text")
-   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-   //    	.attr("dy", ".35em")
-   //    	.text(function(d) { return d.data.symbol; });
-};
-
-
-function updateDonut(){
-
-	var newCoinData = [];
-	
-	for (var i = 0; i < topSelect; i++){
-		newCoinData.push(coinData[i]);
-
-	}
-	console.log(newCoinData);
-	// // create tooltip 
-  //tooltipDonut = d3.select("body").append("div")
-		// .attr("class", "tooltip")
-		// .style("opacity", 0);
-	
-
-    svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
-    	.attr("height", heightDonut)
-  	.append("g")
-    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
-    
-    var pieces = svgDonut.selectAll(".arc")
-    	.data(pieDonut(newCoinData));
-
-    pieces.exit().remove()
-    	.transition()
-    	.duration(750);
-
-
-  	pieces.enter().append("path")
-    	.attr("d", arcDonut)
-    	.style("fill", "#ffffff")
-    	.transition()
-    	.duration(1500)
-      	.style("fill", function(d) { return colorDonut(d.data.symbol); });
-      	
-      pieces.on("mouseover", function(d) {
-        	tooltipDonut.transition()
-            	.duration(200)
-            	.style("opacity", .9)
-            tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
-            	.style("display", "inline-block")
-            	.style("left", (d3.event.pageX + 20) + "px")
-            	.style("top", (d3.event.pageY - 28) + "px");
-		})
-		.on("mouseout", function(d) {
-		    tooltipDonut.transition()
-            	.duration(500)
-            	.style("opacity", 0);
-		});
-
-
-  // 	var pieces = svgDonut.selectAll(".arc")
-  //   	.data(pieDonut(newCoinData));
-
-  //   pieces.exit().remove()
-  //   	.transition()
-  //   	.duration(750);
-
-  // 	pieces.enter().append("path")
-  //   	.attr("d", arcDonut)
-  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
-      	
-  //   pieces.on("mouseover", function(d) {
-  //   	tooltipDonut.transition()
-  //       .duration(200)
-  //           .style("opacity", .9)
-  //       tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
-  //           .style("display", "inline-block")
-  //           .style("left", (d3.event.pageX + 20) + "px")
-  //           .style("top", (d3.event.pageY - 28) + "px");
-		// })
-		// .on("mouseout", function(d) {
-		//     tooltipDonut.transition()
-  //           	.duration(500)
-  //           	.style("opacity", 0);
-		// });
-
-
-  	// svgScatter.append("text")
-   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-   //    	.attr("dy", ".35em")
-   //    	.text(function(d) { return d.data.symbol; });
+    	.style("stroke", function(d) { return zLine(d.id); })
 
 
 };
-
 
 function create_scatter(){
 
@@ -399,8 +341,8 @@ function create_scatter(){
     	.style("font-weight", "bold");
 
     	updatescatterPlot();
-}
 
+};
 
 function updatescatterPlot() {
 
@@ -507,101 +449,150 @@ function updatescatterPlot() {
 
 };
 
-// function update_scatter(coin) {
+function create_donut(){
+
+	widthDonut = $("#donutsvg").width();
+	heightDonut = $("#donutsvg").height();
+	radiusDonut = Math.min(widthDonut, heightDonut) / 2;
+
+	colorDonut = d3.scale.category20();
+
+	 // create tooltip 
+    tooltipDonut = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
+	var svg = d3.select("#donutsvg")
+    	.attr("width", widthDonut)
+    	.attr("height", heightDonut)
+  	.append("g")
+    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
+
+    arcDonut = d3.svg.arc()
+		.outerRadius(radiusDonut - 10)
+		.innerRadius(radiusDonut - 70);
+
+	pieDonut = d3.layout.pie()
+		.sort(null)
+		.value(function(d) { return d.market_cap_usd;});
+
+  //   // vanaf hier in update functie?
+  // svgDonut = svg.selectAll(".arc")
+  //   	.data(pieDonut(coinData))
+  //   	.enter()
+  //   	.append("g")
+  //     	.attr("class", "arc");
+
+  // 	svgDonut.append("path")
+  //   	.attr("d", arcDonut)
+  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
+  //     	.on("mouseover", function(d) {
+  //       	tooltipDonut.transition()
+  //           	.duration(200)
+  //           	.style("opacity", .9)
+  //           tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+  //           	.style("display", "inline-block")
+  //           	.style("left", (d3.event.pageX + 20) + "px")
+  //           	.style("top", (d3.event.pageY - 28) + "px");
+		// })
+		// .on("mouseout", function(d) {
+		//     tooltipDonut.transition()
+  //           	.duration(500)
+  //           	.style("opacity", 0);
+		// });
+
+	updateDonut();
+  	// svgScatter.append("text")
+   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+   //    	.attr("dy", ".35em")
+   //    	.text(function(d) { return d.data.symbol; });
+
+};
+
+function updateDonut(){
+
+	var newCoinData = [];
+	
+	for (var i = 0; i < topSelect; i++){
+		newCoinData.push(coinData[i]);
+
+	}
+
+	// // create tooltip 
+  //tooltipDonut = d3.select("body").append("div")
+		// .attr("class", "tooltip")
+		// .style("opacity", 0);
+	
+
+    svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
+    	.attr("height", heightDonut)
+  	.append("g")
+    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
+    
+    var pieces = svgDonut.selectAll(".arc")
+    	.data(pieDonut(newCoinData));
+
+    pieces.exit().remove()
+    	.transition()
+    	.duration(750);
 
 
-// 	var depends on button;
-// 	console.log(coin);
-// 	var top_list = [];
-// 	for (var i = 0; i < depends on button; i++){
-// 		top_list.push(coin[i]);
-
-// 	}
-
-// 	console.log(top_list);
-
-
-// 	// set x and y domain
-// 	x.domain(d3.extent(coin, function(d) { return Number(d.price_usd); })).nice();
-// 	// y.domain(d3.extent(coin, function(d) {console.log(d.market_cap_usd); return d.market_cap_usd; })).nice();
-// 	y.domain([
-// 		d3.min(coin, function(d){ return 0.75 * d.market_cap_usd}),
-// 		d3.max(coin, function(d) { return 1.25 * d.market_cap_usd })]);
-
-// 	// append g class for x axis and append text
-// 	g.append('g')
-// 		.attr('class', 'x axis')
-//         .attr('transform', 'translate(0,' + height + ')')
-//         .call(x_axis)
-//     .append('text')
-//         .attr('class', 'label')
-//     	.attr('x', width-10)
-//      	.attr('y', -7)
-//      	.style('text-anchor', 'end')
-//      	.style("font-weight", "bold")
-//       	.text("price in USD");
-
-//     // append g class for y axis and append text
-//     g.append('g')
-//     	.attr('class', 'y axis')
-//     	.attr('transform', 'translate(10, 10)')
-//     	.call(y_axis)
-//     .append('text')
-//     	.attr('class', 'label')
-//     	.attr('transform', 'rotate(-90)')
-//     	// .attr('transform', 'translate(100, 100)')
-//     	.attr('y', 10)
-//     	.attr("x", -50)
-//     	.attr('dy', '.71em')
-//     	.style('text-anchor', 'end')
-//     	.style("font-weight", "bold")
-//     	.text("market cap in USD");
+  	pieces.enter().append("path")
+    	.attr("d", arcDonut)
+    	.style("fill", "#ffffff")
+    	.transition()
+    	.duration(1500)
+      	.style("fill", function(d) { return colorDonut(d.data.symbol); });
+      	
+      pieces.on("mouseover", function(d) {
+        	tooltipDonut.transition()
+            	.duration(200)
+            	.style("opacity", .9)
+            tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+            	.style("display", "inline-block")
+            	.style("left", (d3.event.pageX + 20) + "px")
+            	.style("top", (d3.event.pageY - 28) + "px");
+		})
+		.on("mouseout", function(d) {
+		    tooltipDonut.transition()
+            	.duration(500)
+            	.style("opacity", 0);
+		});
 
 
-// 	// plot circles in scatterplot with right dimensions
-// 	g.selectAll(".dot")
-// 		.data(coin)
-// 	.enter().append("circle")
-// 	    .attr("class", "dot")
-// 	    .attr("r", 10)
-// 	    .attr("cx", function(d) { return x(d.price_usd); })
-//       	.attr("cy", function(d) { return y(d.market_cap_usd); })
-//       	.style("fill", function(d) { return color(d.symbol); })
-//       	.on("mouseover", function(d) {
-//         	tooltip.transition()
-//             	.duration(200)
-//             	.style("opacity", .9)
-//             tooltip.html(d.name + "<br>" +d.price_usd + "<br>" +d.market_cap_usd)
-//             	.style("display", "inline-block")
-//             	.style("left", (d3.event.pageX + 20) + "px")
-//             	.style("top", (d3.event.pageY - 28) + "px");
-// 		})
-// 		.on("mouseout", function(d) {
-// 		    tooltip.transition()
-//             	.duration(500)
-//             	.style("opacity", 0);
-// 		});	 	
-													
-// 	// append legend to svg 
-// 	var legend = svg.selectAll(".legend")
-// 				.data(color.domain())
-// 			.enter().append("g")
-// 			    .attr("class", "legend")
-// 			    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  // 	var pieces = svgDonut.selectAll(".arc")
+  //   	.data(pieDonut(newCoinData));
 
-// 	legend.append("rect")
-// 		.attr("x", width - 17)
-// 		.attr("y", 44)
-// 		.attr("width", 17)
-// 		.attr("height", 17)
-// 		.style("fill", color);
+  //   pieces.exit().remove()
+  //   	.transition()
+  //   	.duration(750);
 
-// 	legend.append("text")
-// 		.attr("x", width - 24)
-// 		.attr("y", 50)
-// 		.attr("dy", ".35em")
-// 		.style("text-anchor", "end")
-// 		.text(function(d) { return d; });	
+  // 	pieces.enter().append("path")
+  //   	.attr("d", arcDonut)
+  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
+      	
+  //   pieces.on("mouseover", function(d) {
+  //   	tooltipDonut.transition()
+  //       .duration(200)
+  //           .style("opacity", .9)
+  //       tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
+  //           .style("display", "inline-block")
+  //           .style("left", (d3.event.pageX + 20) + "px")
+  //           .style("top", (d3.event.pageY - 28) + "px");
+		// })
+		// .on("mouseout", function(d) {
+		//     tooltipDonut.transition()
+  //           	.duration(500)
+  //           	.style("opacity", 0);
+		// });
 
 
-// // };
+  	// svgScatter.append("text")
+   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+   //    	.attr("dy", ".35em")
+   //    	.text(function(d) { return d.data.symbol; });
+
+};
+
+
+
