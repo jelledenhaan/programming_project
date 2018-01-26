@@ -16,3 +16,16 @@ This day I started with my donut chart, I wrote some code but the data was not s
 
 # day 5
 I continued with the donut chart and finally I managed to figure out what the problem with my data was. The donut chart can now be seen on the website.The style of the donut chart is far from finished and the lay out could be better. As I already said before, this weekend I will try to focus on the style of the graphs. 
+
+# 22-01-2017 and 23-01-2017
+
+Focused on donut styling of the graphs. I find it difficult to connect the css parts to the right parts of the graphs. After a couple of questions I managed to style the graphs properly. Furthermore it was difficult to color the graphs but and the end I was able to do it. 
+
+# 23-01-2017 and 24-01-2017
+
+Started with the interactivity of the scatterplot. I wanted to adjust the axis and variables of both the x and y axis. I struggled to write an update function for the scatterplot. The most difficult part was to get clear which part should be in the initialization function and which part should be in the update function. I got help from a fellow student and a student teacher. They explained me the basic concept of the update function and after a long time the scatterplot was finally interactive. 
+
+# 25-01-2017 
+
+This day I wanted to make the donutchart interactive in combination with the dropdown which controls the scatterplot as well. I just wanted to do the update function this time all by myself. It was very difficult because there was no clear example on the internet. At the end of the day I managed to write an update function and the donutchart was interactive. 
+
