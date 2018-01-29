@@ -1,3 +1,9 @@
+/* Jelle den Haan 
+11975458
+style.css
+css file used to style the page 
+*/
+
 body {
 	padding: 5px;
 }
@@ -11,7 +17,7 @@ body {
   
 }
 
-#linesvg .point {
+#linesvg .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5;
@@ -39,17 +45,20 @@ body {
 }
 
 #scattersvg .dot {
-  stroke: #000;
+  stroke: white;
 }
 .tooltip {
-  background-color: steelblue;
+  background-color: silver;
   position: absolute;
   width: auto;
   height: auto;
   pointer-events: none;
   color:black;
   font-weight: bold;
-  border-style: none;
+  border-style: ridge;
+  padding: 5px;
+  border-color: black;
+
   
 
 

@@ -9,7 +9,7 @@ output_files = ['../src/data_json/' + i for i in output_files]
 
 for i in range(10):
 	with open(file_list[i]) as csvfile:
-		print(csvfile)
+		
 
 		data_set = []
 
