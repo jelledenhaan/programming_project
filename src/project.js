@@ -102,15 +102,15 @@ $(function() {
  				
  				title = $(this).attr("id");
  				console.log($(this).attr("name"));
- 				updateLine(lineData[+$(this).attr('name')])
- 				selector = +$(this).attr('name')
+ 				updateLine(lineData[+$(this).attr('name')]);
+ 				selector = +$(this).attr('name');
 
  			})
 
  			$(".scale").click(function() {
  				console.log($(this).attr("name"));
  				scale = $(this).attr("name");
- 				updateLine(lineData[selector])
+ 				updateLine(lineData[selector]);
  				
  				
 
@@ -223,16 +223,54 @@ function create_line(coin){
 	// append x axis to g element
 	svgLine.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + heightLine + ")");
+		.attr("transform", "translate(0," + heightLine + ")")
+		.append('text')
+        .attr('class', 'label')
+    	.attr('x', widthLine-10)
+     	.attr('y', -7)
+     	.style('text-anchor', 'end')
+     	.style("font-weight", "bold");
 		// .call(x_axis);
 
 	// append y axis to g element
 	svgLine.append("g")
 		.attr("class", "y axis")
 		.attr("transform", "translate(0," + heightLine + ")")
-		.attr("transform", "rotate(-0)");
+		.attr("transform", "rotate(-0)")
+		.append('text')
+    	.attr('class', 'label')
+    	.attr('transform', 'rotate(-90)')
+    	// .attr('transform', 'translate(100, 100)')
+    	.attr('y', 10)
+    	.attr("x", -50)
+    	.attr('dy', '.71em')
+    	.style('text-anchor', 'end')
+    	.style("font-weight", "bold");
 		// .call(y_axis);		
 
+		// svgScatter.append('g')
+		// .attr('class', 'x axis')
+  //       .attr('transform', 'translate(0,' + heightSCatter + ')')
+  //   .append('text')
+  //       .attr('class', 'label')
+  //   	.attr('x', widthScatter-10)
+  //    	.attr('y', -7)
+  //    	.style('text-anchor', 'end')
+  //    	.style("font-weight", "bold");
+
+  //   // append g class for y axis and append text
+  //   svgScatter.append('g')
+  //   	.attr('class', 'y axis')
+  //   	.attr('transform', 'translate(10, 10)')
+  //   .append('text')
+  //   	.attr('class', 'label')
+  //   	.attr('transform', 'rotate(-90)')
+  //   	// .attr('transform', 'translate(100, 100)')
+  //   	.attr('y', 10)
+  //   	.attr("x", -50)
+  //   	.attr('dy', '.71em')
+  //   	.style('text-anchor', 'end')
+  //   	.style("font-weight", "bold");
 
 	// zLine.domain([good_data[0].id, good_data[1].id]);
 	// // console.log(z.domain(good_data.map(function(d) { return d.id; })));
@@ -284,7 +322,7 @@ function updateLine(coin){
 	// save data in right form
 	// var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
 
-	if (scale == 'linear') {
+	if (scale == "linear") {
 
 		yLine = d3.scale.linear().range([heightLine, 0]);
 		var good_data = [{id: "high", values: high_price}];
@@ -302,11 +340,9 @@ function updateLine(coin){
 		d3.min(low_price, function(d){ return 0.75 * d.price}),
 		d3.max(volume, function(d) { return 1.25 * d.price })]);
 		// zLine.domain([good_data[0].id, good_data[1].id]);
-
 	};
-	
-	
-	// scaling the x-axis 
+
+	// scaling the x-axis
 	xLine = d3.time.scale().range([0, widthLine]);
 	// yLine = d3.scale.log().range([heightLine, 0]);
 	
@@ -326,6 +362,12 @@ function updateLine(coin){
 		.duration(800)
 		.call(d3.svg.axis().scale(yLine).orient("left"));
 
+	svgLine.select(".x")
+		.select("text").text("Date");
+
+	svgLine.select(".y")
+		.select("text").transition().duration(750).text("($)");
+
 	// zLine.domain([good_data[0].id, good_data[1].id]);
 
 
@@ -339,7 +381,7 @@ function updateLine(coin){
 	// 	.enter().append("g")
 	// 		.attr("class", "point" );
 
-	var lineColor = ['slategray', 'black']
+	var lineColor = ["slategray", "black"]
 
 	var punt = svgLine.selectAll(".point").data(good_data)
 
@@ -363,10 +405,27 @@ function updateLine(coin){
 	        .attr("x", widthLine/2)
 	        .attr("y",  30 )
 	        .style("text-anchor", "middle")
-	        .attr("font-size", "22px")
+	        .attr("font-size", "2em")
 	        .attr("text-decoration", "underline") 
 	        .text(title);
 
+	svgLine.append("text") 
+    		.attr("class", "legendLine")     
+	        .attr("x", widthLine/3.5)
+	        .attr("y",  750 )
+	        .style("text-anchor", "middle")
+	        .attr("font-size", "2em")
+	        .style("fill", "slategray")
+	        .text("Price ($)");
+
+	svgLine.append("text") 
+		.attr("class", "legendLine")     
+        .attr("x", widthLine/7)
+        .attr("y",  750 )
+        .style("text-anchor", "middle")
+        .attr("font-size", "2em")
+        .style("fill", "black")
+        .text("24h Volume ($)");
 
 	// // draw lines 
  //    point.append("path")
@@ -645,8 +704,8 @@ function updateDonut(){
 
 
     svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
-    	.attr("height", heightDonut)
-  	.append("g")
+    	.attr("height", heightDonut);
+  	svgDonut = svgDonut.select("g")
     	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
     
     var pieces = svgDonut.selectAll(".arc")
@@ -746,17 +805,20 @@ function clickDonut(currency){
 	// anders alert: no historical info about this currency
 
 	var a = lineVariable.indexOf(currency);
-		console.log(a);
+		console.log(a);	
 
 	if ( a != -1 ){
-		title = currency
+		title = currency;
+		selector = a;
+		console.log(a, lineData[a]);
 		updateLine(lineData[a]);
+		$('html, body').animate({ scrollTop: 0 }, 'fast');
 		
 
 	}
 	else {
 
-		alert("Sorry! There is no historical data for this currency")
+		alert("Sorry! There is no historical data for this currency");
 	};
 
 
