@@ -6,8 +6,6 @@
 
 'use strict';
 
-var internet_data;
-var top_button= 20;
 var coin_data;
 
 // variables line chart
@@ -29,7 +27,6 @@ var x_scatter,
 	color_scatter,
 	svg_scatter,
 	width_scatter,
-	radius_donut,
 	height_scatter;
 
 var x_title = "Price ($)"

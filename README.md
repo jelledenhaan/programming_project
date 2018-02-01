@@ -30,6 +30,8 @@ Furthermore, there is a dropdown menu in which the user will be able to select t
 data about coins with their characteristics:
 
 https://coinmarketcap.com/
+
+
 https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory/data
 
 In order to use this data, the data must be a little bit transformed with help of python. Therefore, I created a python file which tranforms the data from csv format to json format. D3.js and json format fit well to each other.
