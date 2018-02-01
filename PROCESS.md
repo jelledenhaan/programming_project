@@ -41,3 +41,6 @@ Created a function that the line graph updates when the user clicks on a piece o
 # 31-01-2017
 Added an info button on my webpage, when the user click on that button, there will be an explanation of the webpage and a short manual. Fixed another bug in my donutchart. The donutchart stroke wasn't update properly, it had to do with the id i gave to the pieces. After I got some help from an assistent I managed to fix the bug
 
+# 01-02-2017
+Fixed the report and updated the readme. The hardest part of today was cleaning up my code. I had many console.logs and commented code in my code so I deleted them and commented my code. 
+

@@ -1,4 +1,4 @@
-# programming_project
+# Programming_project
 
 ## Problem statement
 
@@ -28,7 +28,7 @@ All the graphs are interactive. The user can also click on the dots in the scatt
 
 ## Prerequisites
 
-### data sources
+### Data sources
 data about coins with their characteristics:
 
 https://coinmarketcap.com/
