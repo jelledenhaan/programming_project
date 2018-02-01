@@ -12,7 +12,9 @@ The goal of this project, is to help people  get in touch with other coins. Furt
 
 ### Sketches
 
-![](doc/sketch.jpg)
+![](doc/screenshotLine.jpg)
+
+![](doc/screenshotscatter.jpg)
 
 ### Main features
 
