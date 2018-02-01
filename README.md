@@ -39,8 +39,14 @@ In order to use this data, the data must be a little bit transformed with help o
 Libraries I used during this assignment:  
 
 Bootstrap V4
+
+
 Jquery
+
+
 D3.js V3
+
+
 D3.queue
 
 ### Similar visualization
