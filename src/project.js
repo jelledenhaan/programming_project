@@ -6,6 +6,8 @@
 
 'use strict';
 
+
+
 var internet_data;
 
 var top_button= 20;
@@ -63,14 +65,14 @@ $(function() {
  			
  		});	
  		
- 		// VERY IMPORTANT VARIABLE
+ 		// store API data in global variable
  		coinData = d;
  		 		
+ 		// create the default scatter and donut chart
  		create_scatter()
  		create_donut()
 
- 		
-
+ 			// button listeners in order to update the graphs
  			$(".top-btn").click(function() {
  				
  				topSelect = Number($(this).attr("name"));
@@ -111,17 +113,12 @@ $(function() {
  				console.log($(this).attr("name"));
  				scale = $(this).attr("name");
  				updateLine(lineData[selector]);
- 				
- 				
-
+ 			
  			})
-
-
-
 	});
 
  
-
+	// load all json files 
  	queue()
 	.defer(d3.json, "data_json/bitcoin.json")
 	.defer(d3.json, "data_json/dash.json")
@@ -139,39 +136,32 @@ $(function() {
  	
 	function init(error, Bitcoin, Dash, Ethereum, IOTA, Litecoin, Monero, NEM, NEO, Omisego, Ripple){
 		
-		
+		// check for error 
 		if (error) throw error;
 
+		// arrays that contain different coins that can be showed in linegraph
 		lineData = [Bitcoin, Dash, Ethereum, IOTA, Litecoin, Monero, NEM, NEO, Omisego, Ripple];
 		lineVariable = ["Bitcoin", "Dash", "Ethereum", "IOTA", "Litecoin", "Monero", "NEM", "NEO", "Omisego", "Ripple"];
 		
-		// var a = lineVariable.indexOf("bitcoin");
-		// console.log(a);
-
-
-
-
 		create_line(lineData[0]);
 		updateLine(lineData[0]);
-
 	};
-
 
 });
 
 
 function create_line(coin){
 
-	// variables for parameters of graph
+	// variables for parameters of the linegraph
 	var svg = d3.select("#linesvg"),
 	margin = {top: 40, right: 20, bottom: 130, left: 60};
 
 	widthLine = $("#linesvg").width() - margin.left - margin.right,
 	heightLine = $("#linesvg").height() - margin.top - margin.bottom,
 	svgLine = svg.append("g")
-		.attr("class", "graph")
-		.attr("transform", 
-			"translate(" + margin.left + "," + margin.top + ")");
+				.attr("class", "graph")
+				.attr("transform", 
+					"translate(" + margin.left + "," + margin.top + ")");
 
 	// var parseDate = d3.time.format("%Y/%m/%d").parse
 
@@ -220,7 +210,7 @@ function create_line(coin){
 	// 	.orient("left");
 	// 	// .ticks(15);
 
-	// append x axis to g element
+	// append x axis class to svg element
 	svgLine.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + heightLine + ")")
@@ -232,7 +222,7 @@ function create_line(coin){
      	.style("font-weight", "bold");
 		// .call(x_axis);
 
-	// append y axis to g element
+	// append y axis class to svg element
 	svgLine.append("g")
 		.attr("class", "y axis")
 		.attr("transform", "translate(0," + heightLine + ")")
@@ -296,10 +286,10 @@ function create_line(coin){
 
 function updateLine(coin){
 
-	// console.log(title);
+	// function to parse the date
 	var parseDate = d3.time.format("%Y/%m/%d").parse
 
-	// first make sure that the data is in the right form 
+	
     // variables to store data
     var data = coin;
     var low_price = [];
@@ -321,9 +311,10 @@ function updateLine(coin){
 
 	// save data in right form
 	// var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
-
+	// if statement to determine which scale the user selected
 	if (scale == "linear") {
 
+		// change all variables if scale is changed
 		yLine = d3.scale.linear().range([heightLine, 0]);
 		var good_data = [{id: "high", values: high_price}];
 			yLine.domain([
@@ -334,6 +325,7 @@ function updateLine(coin){
 	}
 
 	else {
+		
 		yLine = yLine = d3.scale.log().range([heightLine, 0]);
 		var good_data = [{id: "high", values: high_price }, {id: "low", values: volume }];
 		yLine.domain([
@@ -346,51 +338,54 @@ function updateLine(coin){
 	xLine = d3.time.scale().range([0, widthLine]);
 	// yLine = d3.scale.log().range([heightLine, 0]);
 	
-
+	// determine domain of x axis
 	xLine.domain(d3.extent(low_price, function(d) { return d.date } ));
 	// yLine.domain([
 	// 	d3.min(low_price, function(d){ return 0.75 * d.price}),
 	// 	d3.max(volume, function(d) { return 1.25 * d.price })]);
 
+	// select x axis to update this axis
 	svgLine.select(".x")
 		.transition()
 		.duration(800)
 		.call(d3.svg.axis().scale(xLine).orient("bottom"));
 
+	// select y axis to update this axis
 	svgLine.select(".y")
 		.transition()
 		.duration(800)
 		.call(d3.svg.axis().scale(yLine).orient("left"));
 
+	// append x axis title
 	svgLine.select(".x")
 		.select("text").text("Date");
 
+	// append y axis title
 	svgLine.select(".y")
 		.select("text").transition().duration(750).text("($)");
 
 	// zLine.domain([good_data[0].id, good_data[1].id]);
 
 
-	// // variables to draw lines 
+	// variables to draw lines 
   	var line = d3.svg.line()
 	    .x(function(d) { return xLine(d.date); })
 	    .y(function(d) { return yLine(d.price); });
 
-	// var point= svgLine.selectAll(".point")
-	// 	.data(good_data)
-	// 	.enter().append("g")
-	// 		.attr("class", "point" );
-
+	// set color for the lines
 	var lineColor = ["slategray", "black"]
 
+	// select new data 
 	var punt = svgLine.selectAll(".point").data(good_data)
 
+	// remove the old line
 	svgLine.selectAll(".line").remove();
 
 	punt.exit().remove()
 		.transition()
 		.duration(800);
 
+	// enter and append new path in order to draw new line
 	punt.enter().append("path")
 		.attr("class", "line")
     	.attr("d", function(d) { return line(d.values); })
@@ -398,48 +393,41 @@ function updateLine(coin){
     	.style("stroke", function(d, i) { return lineColor[i]; })
     	.style("fill", "none");
 
-   	// console.log(lineData[selector]);
+   	// append text to graph 
    	svgLine.selectAll(".text").remove();
     svgLine.append("text") 
     		.attr("class", "text")     
-	        .attr("x", widthLine/2)
-	        .attr("y",  30 )
+	        .attr("x", widthLine/1.6)
+	        .attr("y",  -10 )
 	        .style("text-anchor", "middle")
-	        .attr("font-size", "2em")
+	        .attr("font-size", "20px")
 	        .attr("text-decoration", "underline") 
 	        .text(title);
 
 	svgLine.append("text") 
     		.attr("class", "legendLine")     
-	        .attr("x", widthLine/3.5)
-	        .attr("y",  750 )
+	        .attr("x", widthLine/3)
+	        .attr("y",  525 )
 	        .style("text-anchor", "middle")
-	        .attr("font-size", "2em")
+	        .attr("font-size", "20px")
 	        .style("fill", "slategray")
 	        .text("Price ($)");
 
 	svgLine.append("text") 
 		.attr("class", "legendLine")     
         .attr("x", widthLine/7)
-        .attr("y",  750 )
+        .attr("y",  525 )
         .style("text-anchor", "middle")
-        .attr("font-size", "2em")
+        .attr("font-size", "20px")
         .style("fill", "black")
         .text("24h Volume ($)");
-
-	// // draw lines 
- //    point.append("path")
- //    	.attr("class", "line")
- //    	.attr("d", function(d) { return line(d.values); })
- //    	.style("stroke", function(d) { return zLine(d.id); })
-
 
 };
 
 function create_scatter(){
 
 	var svg = d3.select("#scattersvg"),
-		margin = {top: 40, right: 35, bottom: 30, left: 60};
+		margin = {top: 40, right: 90, bottom: 30, left: 50};
 		
 	widthScatter = $("#scattersvg").width() - margin.left - margin.right;
 	heightSCatter = $("#scattersvg").height() - margin.top - margin.bottom;
@@ -543,8 +531,9 @@ function updatescatterPlot() {
 	circles.enter().append("circle")
 		.transition()
 		.duration(800)
-	    .attr("class", "dot")
+	    .attr("class", function(d){ return "dot " + d.id;})
 	    .attr("id", function(d){ return d.id;})
+	    // .classed(function(d){ return d.id;},)
 	    .attr("r", 10)
 	    .attr("cx", function(d) { return xScatter(+d[xvariableScatter]); })
       	.attr("cy", function(d) { return yScatter(+d[yvariableScatter]); })
@@ -569,7 +558,7 @@ function updatescatterPlot() {
 			.style("opacity", .2);
 
 			var id = this["id"]
-			svgDonut.select("#"+id).style("stroke", "black").style("stroke-width", "2.5px");
+			svgDonut.selectAll("#"+id).style("stroke", "black").style("stroke-width", "2.5px");
 
 		})
 		.on("mouseout", function(d) {
@@ -578,7 +567,7 @@ function updatescatterPlot() {
             	.style("opacity", 0);
             	d3.selectAll(".dot").style("opacity", 1);
             	var id = this["id"]
-				svgDonut.select("#"+id).style("stroke", "white");
+				svgDonut.selectAll("#"+id).style("stroke", "white");
 
 
 		});	
@@ -605,7 +594,7 @@ function updatescatterPlot() {
 			    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
 	legend.append("rect")
-		.attr("x", widthScatter - 17)
+		.attr("x", widthScatter + 70)
 		.attr("y", 44)
 		.attr("width", 17)
 		.attr("height", 17)
@@ -613,12 +602,13 @@ function updatescatterPlot() {
 		.style("stroke","black");
 
 	legend.append("text")
-		.attr("x", widthScatter - 24)
+		.attr("x", widthScatter + 63)
 		.attr("y", 50)
 		.attr("dy", ".35em")
 		.style("text-anchor", "end")
 		.text(function(d) { return d; });	
 
+	console.log("hoi");
 };
 
 function create_donut(){
@@ -690,8 +680,8 @@ function updateDonut(){
 	
 	for (var i = 0; i < topSelect; i++){
 		newCoinData.push(coinData[i]);
-		total_cap = total_cap + Number(newCoinData[0].market_cap_usd)
-
+		total_cap +=  Number(newCoinData[i].market_cap_usd)
+		
 	}
 
 	// // create tooltip 
@@ -700,7 +690,7 @@ function updateDonut(){
 		// .style("opacity", 0);
 	
 	// console.log(newCoinData[0].market_cap_usd);
-	console.log(total_cap);
+	
 
 
     svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
@@ -711,15 +701,16 @@ function updateDonut(){
     var pieces = svgDonut.selectAll(".arc")
     	.data(pieDonut(newCoinData));
 
+    // pieces.selectAll(".path").remove();
+
     pieces.exit().remove()
     	.transition()
     	.duration(750);
 
-
   	pieces.enter().append("path")
     	.attr("d", arcDonut)
     	.attr("id",function(d){ return d.data.id;})
-    	.style("fill", "#ffffff")
+    	.style("fill", "lightgrey")
     	.transition()
     	.duration(1500)
       	.style("fill", function(d) { return colorDonut(d.data.symbol); })
@@ -730,19 +721,19 @@ function updateDonut(){
         	tooltipDonut.transition()
             	.duration(200)
             	.style("opacity", .9)
-            tooltipDonut.html(d.data.name +  "<br>" + "Marketcap ($):" + +d.data.market_cap_usd)
+            tooltipDonut.html(d.data.name +  "<br>" + "Marketcap ($):" + +d.data.market_cap_usd + "<br>" + "% of top " + topSelect + ": " +((d.data.market_cap_usd/total_cap)*100))
             	.style("display", "inline-block")
             	.style("left", (d3.event.pageX + 20) + "px")
             	.style("top", (d3.event.pageY - 28) + "px");
             	var id = this["id"]
-				svgScatter.select("#"+id).style("stroke", "red");
+				svgScatter.selectAll("#"+id).style("stroke", "red");
 		})
 		.on("mouseout", function(d) {
 		    tooltipDonut.transition()
             	.duration(500)
             	.style("opacity", 0);
             	var id = this["id"]
-				svgScatter.select("#"+id).style("stroke", "black");
+				svgScatter.selectAll("#"+id).style("stroke", "black");
 
 		});
 
@@ -757,7 +748,7 @@ function updateDonut(){
 	        .attr("x", widthDonut /4)
 	        .attr("y",  heightDonut/50 )
 	        .style("text-anchor", "end")
-	        .attr("font-size", "14px")
+	        .attr("font-size", "10px")
 	        .attr("font-weight", "bold")
 	        .attr("text-decoration", "underline") 
 	        .text("Total marketcap of top" + " " + topSelect + ":" + " " + total_cap);
@@ -799,27 +790,22 @@ function updateDonut(){
 
 function clickDonut(currency){
 
-	// eerst kijken of dat symbol ook bestaat qua json bestand. 
-	// als dit zo is dat updatelinechart()
-	// dus dat moet titel veranderd worden en andere variabelen
-	// anders alert: no historical info about this currency
-
+	// check if variable is in list of currencies
 	var a = lineVariable.indexOf(currency);
-		console.log(a);	
 
+	// if variable is in list, change data to update linegraph
 	if ( a != -1 ){
 		title = currency;
 		selector = a;
 		console.log(a, lineData[a]);
 		updateLine(lineData[a]);
-		$('html, body').animate({ scrollTop: 0 }, 'fast');
-		
-
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
+	
 	}
+	// show alert message if there is no data of the desired currency
 	else {
-
-		alert("Sorry! There is no historical data for this currency");
+			alert("Sorry! There is no historical data of this currency");
 	};
 
+};
 
-}

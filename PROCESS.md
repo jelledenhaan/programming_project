@@ -29,3 +29,15 @@ Started with the interactivity of the scatterplot. I wanted to adjust the axis a
 
 This day I wanted to make the donutchart interactive in combination with the dropdown which controls the scatterplot as well. I just wanted to do the update function this time all by myself. It was very difficult because there was no clear example on the internet. At the end of the day I managed to write an update function and the donutchart was interactive. 
 
+# 26-01-2017
+Started with the update function of the linegraph. It was difficult because the linegraph function needed many input arguments. I struggled to change this and made a beginning with it.
+
+# 29-01-2017
+Finished the linegraph, finally managed to change the line of the graph. And added a legend and axes titles. 
+
+# 30-01-2017
+Created a function that the line graph updates when the user clicks on a piece of the donutchart or on a dot of the scatterplot. Added some style things to the scatterplot which caused a minor bug. The dots were dissapearing but at the end of the day it was all normal.
+
+# 31-01-2017
+Added an info button on my webpage, when the user click on that button, there will be an explanation of the webpage and a short manual. Fixed another bug in my donutchart. The donutchart stroke wasn't update properly, it had to do with the id i gave to the pieces. After I got some help from an assistent I managed to fix the bug
+

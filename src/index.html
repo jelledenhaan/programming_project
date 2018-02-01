@@ -21,7 +21,56 @@
       <div class="jumbotron jumbotron-fluid text-center">
         <div class="container">
           <h1>Cryptocurrencies</h1>      
-          <p>Historical data and actual data about cryptocurrency</p>
+          <p>Historical data and current data about cryptocurrency</p>
+        <!-- Button to Open the Modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+              Information
+            </button>
+            <!-- The Modal -->
+            <div class="modal fade" id="myModal">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">          
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title">General information and usage manual</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                  <h1>The goal of this page</h1>
+                  <p class="text-left"> Welcome to this webpage about cryptocurrency. On this webpage historical and current data about
+                  cryptocurrency can be found. Cryptocurrency is getting more and more popular. However, many people do not 
+                  know any other crypto coins besides the Bitcoin. With this website, people can get in touch with some other 
+                  popular crypto coins and their characteristics. </p>
+                  <h2>The different type of graphs and how to use them</h2>
+                  <p class="text-left">In the Linegraph historical data of the most popular cryptocoins of the last years can be found. The user can select
+                  the coin of which they want to know the historical price and 24h volume. Furthermore, the user can choose either a linear or 
+                  a logaritmic scale. The linear scale is implemented in order to show the huge price increases of the coins in the last year(s). When the user select the linear scale, only the price line will be shown. Some coins only exist just one year or less, therefore the time scale can be seen on the x axis. Collected data until: November 7th. 2017</p>
+                  <p class="text-left">The scatterplot and the donutchart show current data about the most popular cryptocoins. Each time the users refreshes the page, data will be extracted from the internet in order to show the latest characteristics. In the scatterplot the user can select how many coins are shown. They can also adjust the variables on both axes. The user can choose between 4 variables:</p>
+                  <ul class="text-left">
+                    <li><strong>Marketcap:</strong> This is a way to rank the relative size of a cryptocurrency. It is calculated by multiplying the Price by    the Circulating supply.</li>
+                    <li><strong>24h volume:</strong> The total volume of that coin which is traded in the past 24 hours.</li>
+                    <li><strong>Price:</strong> The price of one coin right now. </li>  
+                    <li><strong>Total coin supply:</strong> is the total amount of coins in existence right now (minus any coins that have been verifiably burned).</li>
+                  </ul>
+                  <p class="text-left">The donutchart will show, based on the selection (number of coins) the user selected, the corresponding marketcaps of those coins. The user can also click on the pieces in the donutchart or scatterplot dots in order to view the historical data of that coin. </p>
+                  <h3>Data sources</h3>
+                  <p>
+                    <ul class="text-left">
+                      <li><a href = "https://coinmarketcap.com/">Current data from Coinmarketcap.</a></li>
+                      <li><a href = "https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory">Historical data from Kaggle.</a></li>
+                    </ul>
+                  <p class="text-left"><strong>Made by:</strong> Jelle den Haan <br>11975458</p>
+                  </p>
+                  <p class="text-left">Note: There is not historical data available for every coin</p>
+                  </div>
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
       <div class="btn-group container-fluid">
@@ -55,8 +104,8 @@
     <div class="container-fluid">
       <div class="row">
           <div class="col-lg-12" style='background-color:lightgrey'>
-              <svg width='100%' height='850' id='linesvg'>
-                <text x="750" y="30" font-family="arial" font-size="30px" text-anchor="end" font-weight="bold" fill="black">Historical top 10 currencies</text>
+              <svg width='100%' height='650' id='linesvg'>
+                <text x="750" y="30" font-family="arial" font-size="20px" text-anchor="end" font-weight="bold" fill="black">Historical top 10 currencies</text>
               </svg>
           </div>
     </div>
@@ -98,13 +147,13 @@
     <div class="container-fluid">
       <div class="row">
           <div class="col-lg-8" style='background-color:lightgrey'>
-            <svg width='100%' height='700' id='scattersvg'>
-              <text x="250" y="40" font-family="arial" font-size="30px" font-weight="bold" fill="black">Current top currencies</text>
+            <svg width='100%' height='600' id='scattersvg'>
+              <text x="250" y="40" font-family="arial" font-size="20px" font-weight="bold" fill="black">Current top currencies</text>
             </svg>   
           </div>
           <div class="col-lg-4" style='background-color:lightgrey'>
-              <svg width='100%' height='700' id='donutsvg'>
-              <text x="10" y="40" font-family="arial" font-size="30px" font-weight="bold" fill="black">Marketcap of current top currencies</text>
+              <svg width='100%' height='600' id='donutsvg'>
+              <text x="10" y="40" font-family="arial" font-size="20px" font-weight="bold" fill="black">Marketcap of current top currencies</text>
               </svg>
           </div>
       </div>
