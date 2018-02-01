@@ -1,4 +1,3 @@
-
 # Jelle den Haan 11975458
 #
 # This file reads csv files, copies the data
