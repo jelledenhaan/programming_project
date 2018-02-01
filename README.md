@@ -67,6 +67,8 @@ The aim is to be as clear as coinmarketcap.com and add a couple of features. Lik
 
 For me the hardest past is to find data and transform it into the right form in order to create visualizations. Furthermore, finding new data about cryptocurrencies may be hard while crypto is relatively new for me and many people. It is also new for me to work with an API request. 
 
+Copyright under MIT License 2018, Jelle den Haan 
+
 
 
 
