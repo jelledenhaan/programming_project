@@ -648,4 +648,3 @@ function clickDonut(currency){
 	};
 
 };
-
