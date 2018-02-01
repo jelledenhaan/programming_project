@@ -5,13 +5,13 @@ https://jelledenhaan.github.io/programming_project/src/index.html
 
 ## Problem statement
 
-Cryptocurrency is getting more and more popular. However, many people do not know any other crypto coins besides the Bitcoin. With this website, people can get in touch with some other popular crypto coins and their characteristics.
+Cryptocurrency is getting more and more popular. However, many people do not know any other crypto coins besides the Bitcoin. With this website, people can get in touch with some other popular crypto coins and their characteristics. The user will be able to view different kind of characteristics of crypto coins. Furthermore, the user is able to change the number of coins that will be shown. 
 
 ## Solution 
 
 ### Idea
 
-The goal of this project, is to help people  get in touch with other coins. Furthermore, this project shows some statistics of the coins itself. For example, the marketcap, prices, volume etc. This in order to inform people about different coins.
+The goal of this project, is to help people  get in touch with other coins. Furthermore, this project shows some statistics of the coins itself. For example, the marketcap, prices, volume etc. This in order to inform people about different coins. The linegraph will show historical data of the most popular cryptocoins of the past years. The scatterplot and donutchart will show data of the current top coins. An API request will make sure that the data of the scatterplot and donutchart is up to date. 
 
 ### Sketches
 
@@ -65,7 +65,7 @@ The aim is to be as clear as coinmarketcap.com and add a couple of features. Lik
 
 ### Hardest part
 
-For me the hardest past is to find data and transform it into the right form in order to create visualizations. Furthermore, finding new data about cryptocurrencies may be hard while crypto is relatively new for me and many people. 
+For me the hardest past is to find data and transform it into the right form in order to create visualizations. Furthermore, finding new data about cryptocurrencies may be hard while crypto is relatively new for me and many people. It is also new for me to work with an API request. 
 
 
 
