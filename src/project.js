@@ -1,7 +1,7 @@
 /* Jelle den Haan 
  11975458
  project.js
- end project of programming course
+ javascript file which contains functions to create and update graphs
 */
 
 'use strict';
@@ -55,8 +55,8 @@ $(function() {
  		coin_data = d;
  		 		
  		// create the default scatter and donut chart
- 		create_scatter()
- 		create_donut()
+ 		initialize_scatter()
+ 		initialize_donut()
 
  			// button listeners in order to update the graphs
  			$(".top-btn").click(function() {
@@ -134,14 +134,14 @@ $(function() {
 		line_variable = ["Bitcoin", "Dash", "Ethereum", "IOTA", "Litecoin", 
 		"Monero", "NEM", "NEO", "Omisego", "Ripple"];
 		
-		create_line(line_data[0]);
+		initialize_line(line_data[0]);
 		update_line(line_data[0]);
 	};
 
 });
 
 
-function create_line(coin){
+function initialize_line(coin){
 
 	// variables for parameters of the linegraph
 	var svg = d3.select("#linesvg"),
@@ -310,7 +310,7 @@ function update_line(coin){
 
 };
 
-function create_scatter(){
+function initialize_scatter(){
 
 	// determine parameters of scatter svg
 	var svg = d3.select("#scattersvg"),
@@ -502,7 +502,7 @@ function update_scatter() {
 
 };
 
-function create_donut(){
+function initialize_donut(){
 
 	// determine parameters of donutchart
 	width_donut = $("#donutsvg").width();
