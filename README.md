@@ -2,7 +2,7 @@
 
 ## Problem statement
 
-Cryptocurrency is getting more and more popular these days. Many people do not know other coins besides the Bitcoin. With help of these visualizations, they get in touch with othere coins and some their characteristics. 
+Cryptocurrency is getting more and more popular. However, many people do not know any other crypto coins besides the Bitcoin. With this website, people can get in touch with some other popular crypto coins and their characteristics.
 
 ## Solution 
 
@@ -16,11 +16,11 @@ The goal of this project, is to help people  get in touch with other coins. Furt
 
 ### Main features
 
-So far, the project will consist of a multiline graph, a grouped barchart and a scatterplot/piechart. It could be that the latter one will be substituted for another new visualization with different characteristics. Not sure about that for now. 
+The project consits of a multi linegraph, a scatterplot and a donutchart. 
 
-All visualizations will contain tooltips to view the specific number/amount of something. Furthermore, there will be a dropdown menu in which the user will be able to select the coin they want to view. 
+The scatterplot and donutchart will contain a tooltip. When the user hovers over the two charts, the characteristics of this coin can be viewed. The linegraph however will not contain a tooltip. Because there are so many dates the tooltip would not work properly. For some coins, the data goes back to 2014. That means there are more than 1000 days to visualize and this is the reason that a tooltip would not work properly. Besides that, in my opinion a tooltip is not needed at all at the linegraph. This because the goal of the linegraph is to show the huge increase of volume and price that almost every coin has had in the past year. In my opinion it is not interesting to know the price of a specific date, however it is interesting to see the general trend of those coins. 
 
-An additional option could be to implement a 'on click' listener in de grouped bar chart as well. 
+Furthermore, there is a dropdown menu in which the user will be able to select the coin they want to view in the linegraph. There is also another dropdown menu present, the user can select the desired axes variables and how many coins they would like to see in the scatterplot and donutchart. 
 
 ## Prerequisites
 
@@ -30,15 +30,16 @@ data about coins with their characteristics:
 https://coinmarketcap.com/
 https://www.kaggle.com/sudalairajkumar/cryptocurrencypricehistory/data
 
-In order to use this data, the data must be a little bit transformed with help of python. The idea is to create a json file which is very user friendly when using d3.
+In order to use this data, the data must be a little bit transformed with help of python. Therefore, I created a python file which tranforms the data from csv format to json format. D3.js and json format fit well to each other.
 
 ### External components
 
-include libaries, this list can be expanded throughout the project:
+Libraries I used during this assignment:  
 
-d3-tip
-Bootstrap
+Bootstrap V4
 Jquery
+D3.js V3
+D3.queue
 
 ### Similar visualization
 As far as I know coinmarketcap.com comes close to what I have in mind. This website is easy in use and very clear for beginners. 

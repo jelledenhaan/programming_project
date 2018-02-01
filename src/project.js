@@ -6,67 +6,56 @@
 
 'use strict';
 
-
-
 var internet_data;
-
 var top_button= 20;
-var coinData;
+var coin_data;
 
 // variables line chart
-var widthLine,
-	heightLine,
-	svgLine,
-	xLine,
-	yLine,
-	zLine;
-var lineData;
-var lineVariable;
+var width_line,
+	height_line,
+	svg_line,
+	x_line,
+	y_line,
+	z_line;
+var line_data;
+var line_variable;
 var scale = "logaritmic";
 var selector = 0;
 var title = "Bitcoin";
 
 // variables scatterplot
-var xScatter,
-	yScatter,
-	colorScatter,
-	svgScatter,
-	widthScatter,
-	radiusDonut,
-	heightSCatter;
+var x_scatter,
+	y_scatter,
+	color_scatter,
+	svg_scatter,
+	width_scatter,
+	radius_donut,
+	height_scatter;
 
 var x_title = "Price ($)"
 var y_title = "Marketcap ($)"
-var xvariableScatter = 'price_usd';
-var yvariableScatter = 'market_cap_usd';
-var topSelect = 20;
+var xvariable_scatter = "price_usd";
+var yvariable_scatter = "market_cap_usd";
+var top_select = 20;
 
-var tooltipScatter; 
-
+var tooltip_scatter; 
 
 // variables donutchart
-var widthDonut,		
-	heightDonut,
-	radiusDonut,
-	colorDonut,
-	tooltipDonut,
-	arcDonut,
-	pieDonut,
-	svgDonut;
+var width_donut,		
+	height_donut,
+	radius_donut,
+	color_donut,
+	tooltip_donut,
+	arc_donut,
+	pie_donut,
+	svg_donut;
+
 $(function() {
 
- 	$.getJSON('https://api.coinmarketcap.com/v1/ticker/?limit=20', function(d) {
- 		
-
- 		$.each(d, function(i, json) {
- 			// internet_data = d;
- 			// console.log(json.market_cap_usd);
- 			// total_cap = total_cap + Number(json.market_cap_usd)		
- 			
- 		});	
+ 	$.getJSON("https://api.coinmarketcap.com/v1/ticker/?limit=20", function(d) {
  		
  		// store API data in global variable
- 		coinData = d;
+ 		coin_data = d;
  		 		
  		// create the default scatter and donut chart
  		create_scatter()
@@ -75,49 +64,53 @@ $(function() {
  			// button listeners in order to update the graphs
  			$(".top-btn").click(function() {
  				
- 				topSelect = Number($(this).attr("name"));
- 				updatescatterPlot();
- 				updateDonut();	
+ 				// change selection of coins and update scatter and donut chart
+ 				top_select = Number($(this).attr("name"));
+ 				
+ 				update_scatter();
+ 				update_donut();	
 
  			})
  			
  			$(".x-axis-btn").click(function() {
  				
- 				xvariableScatter = $(this).attr("name");
+ 				// change x variable and x axis and call update scatter function
+ 				xvariable_scatter = $(this).attr("name");
  				x_title = $(this).attr("id");
 
- 				updatescatterPlot();
-
+ 				update_scatter();
 
  			})
  			
  			$(".y-axis-btn").click(function() {
  				
- 				yvariableScatter = $(this).attr("name");
+ 				// change y variable and y axis and call update scatter function
+ 				yvariable_scatter = $(this).attr("name");
  				y_title = $(this).attr("id");
 
- 				updatescatterPlot();
+ 				update_scatter();
 
  			})
 
  			$(".currency").click(function() {
  				
+ 				// update title and call update line 
  				title = $(this).attr("id");
- 				console.log($(this).attr("name"));
- 				updateLine(lineData[+$(this).attr('name')]);
- 				selector = +$(this).attr('name');
+ 				update_line(line_data[+$(this).attr("name")]);
+ 				selector = +$(this).attr("name");
 
  			})
 
  			$(".scale").click(function() {
- 				console.log($(this).attr("name"));
+ 				
+ 				// update scale and cale update line function
  				scale = $(this).attr("name");
- 				updateLine(lineData[selector]);
+ 				
+ 				update_line(line_data[selector]);
  			
  			})
 	});
 
- 
 	// load all json files 
  	queue()
 	.defer(d3.json, "data_json/bitcoin.json")
@@ -132,19 +125,20 @@ $(function() {
 	.defer(d3.json, "data_json/ripple.json")
 	.await(init);
 
-
- 	
 	function init(error, Bitcoin, Dash, Ethereum, IOTA, Litecoin, Monero, NEM, NEO, Omisego, Ripple){
 		
 		// check for error 
 		if (error) throw error;
 
 		// arrays that contain different coins that can be showed in linegraph
-		lineData = [Bitcoin, Dash, Ethereum, IOTA, Litecoin, Monero, NEM, NEO, Omisego, Ripple];
-		lineVariable = ["Bitcoin", "Dash", "Ethereum", "IOTA", "Litecoin", "Monero", "NEM", "NEO", "Omisego", "Ripple"];
+		line_data = [Bitcoin, Dash, Ethereum, IOTA, Litecoin, Monero, NEM, 
+		NEO, Omisego, Ripple];
 		
-		create_line(lineData[0]);
-		updateLine(lineData[0]);
+		line_variable = ["Bitcoin", "Dash", "Ethereum", "IOTA", "Litecoin", 
+		"Monero", "NEM", "NEO", "Omisego", "Ripple"];
+		
+		create_line(line_data[0]);
+		update_line(line_data[0]);
 	};
 
 });
@@ -156,139 +150,44 @@ function create_line(coin){
 	var svg = d3.select("#linesvg"),
 	margin = {top: 40, right: 20, bottom: 130, left: 60};
 
-	widthLine = $("#linesvg").width() - margin.left - margin.right,
-	heightLine = $("#linesvg").height() - margin.top - margin.bottom,
-	svgLine = svg.append("g")
+	width_line = $("#linesvg").width() - margin.left - margin.right,
+	height_line = $("#linesvg").height() - margin.top - margin.bottom,
+	svg_line = svg.append("g")
 				.attr("class", "graph")
 				.attr("transform", 
 					"translate(" + margin.left + "," + margin.top + ")");
 
-	// var parseDate = d3.time.format("%Y/%m/%d").parse
-
-	// // first make sure that the data is in the right form 
- //    // variables to store data
- //    var data = coin;
- //    var low_price = [];
-	// var high_price = [];
-	// var volume = [];
-	// var market_cap =[];
-
-	// // push date to right list
-	// data.forEach(function(d){ 
-	// 	var date = parseDate(d.date);
-	// 	// console.log(date);
-	// 	low_price.push({date: date, price: d.low});
-	// 	high_price.push({date: date, price: d.high});
-	// 	market_cap.push({date: date, price: d.market_cap})
-	// 	volume.push({date: date, price: d.volume})
-	// 	});
-
-	// // save data in right form
-	// var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
-
-	
-	// // scaling the x-axis 
-	// xLine = d3.time.scale().range([0, widthLine]);
-	// yLine = d3.scale.log().range([heightLine, 0]);
-	// zLine = d3.scale.category20();
-
-	// set the domains of x and y axis  
-	// xLine.domain(d3.extent(volume, function(d) { return d.date } ));
-	// yLine.domain([
-	// 	d3.min(low_price, function(d){ return 0.75 * d.price}),
-	// 	d3.max(volume, function(d) { return 1.25 * d.price })]);
-
-
-	// define and create x axis
-	// var x_axis = d3.svg.axis().scale(xLine)
-	// 	.orient("bottom");
-	// 	// .ticks(17)
-	// 	// .tickFormat(function(d){ return d;});
-
-	// // define and create y axis
-	// var y_axis = d3.svg.axis().scale(yLine)
-	// 	.orient("left");
-	// 	// .ticks(15);
-
 	// append x axis class to svg element
-	svgLine.append("g")
+	svg_line.append("g")
 		.attr("class", "x axis")
-		.attr("transform", "translate(0," + heightLine + ")")
-		.append('text')
-        .attr('class', 'label')
-    	.attr('x', widthLine-10)
-     	.attr('y', -7)
-     	.style('text-anchor', 'end')
+		.attr("transform", "translate(0," + height_line + ")")
+		.append("text")
+        .attr("class", "label")
+    	.attr("x", width_line-10)
+     	.attr("y", -7)
+     	.style("text-anchor", "end")
      	.style("font-weight", "bold");
-		// .call(x_axis);
 
 	// append y axis class to svg element
-	svgLine.append("g")
+	svg_line.append("g")
 		.attr("class", "y axis")
-		.attr("transform", "translate(0," + heightLine + ")")
+		.attr("transform", "translate(0," + height_line + ")")
 		.attr("transform", "rotate(-0)")
-		.append('text')
-    	.attr('class', 'label')
-    	.attr('transform', 'rotate(-90)')
-    	// .attr('transform', 'translate(100, 100)')
-    	.attr('y', 10)
+		.append("text")
+    	.attr("class", "label")
+    	.attr("transform", "rotate(-90)")
+    	.attr("y", 10)
     	.attr("x", -50)
-    	.attr('dy', '.71em')
-    	.style('text-anchor', 'end')
+    	.attr("dy", ".71em")
+    	.style("text-anchor", "end")
     	.style("font-weight", "bold");
-		// .call(y_axis);		
-
-		// svgScatter.append('g')
-		// .attr('class', 'x axis')
-  //       .attr('transform', 'translate(0,' + heightSCatter + ')')
-  //   .append('text')
-  //       .attr('class', 'label')
-  //   	.attr('x', widthScatter-10)
-  //    	.attr('y', -7)
-  //    	.style('text-anchor', 'end')
-  //    	.style("font-weight", "bold");
-
-  //   // append g class for y axis and append text
-  //   svgScatter.append('g')
-  //   	.attr('class', 'y axis')
-  //   	.attr('transform', 'translate(10, 10)')
-  //   .append('text')
-  //   	.attr('class', 'label')
-  //   	.attr('transform', 'rotate(-90)')
-  //   	// .attr('transform', 'translate(100, 100)')
-  //   	.attr('y', 10)
-  //   	.attr("x", -50)
-  //   	.attr('dy', '.71em')
-  //   	.style('text-anchor', 'end')
-  //   	.style("font-weight", "bold");
-
-	// zLine.domain([good_data[0].id, good_data[1].id]);
-	// // console.log(z.domain(good_data.map(function(d) { return d.id; })));
-	// // // variables to draw lines 
- //  	var line = d3.svg.line()
-	//     .x(function(d) { return xLine(d.date); })
-	//     .y(function(d) { return yLine(d.price); });
-
- // 	var point= svgLine.selectAll(".point")
-	// 	.data(good_data)
-	// 	.enter().append("g")
-	// 		.attr("class", "point" );
-
-	// // draw lines 
- //    point.append("path")
- //    	.attr("class", "line")
- //    	.attr("d", function(d) { return line(d.values); })
- //    	.style("stroke", function(d) { return zLine(d.id); });	
-
- 	// updateLine(coin);
-    
+		   
 };
 
-function updateLine(coin){
+function update_line(coin){
 
 	// function to parse the date
-	var parseDate = d3.time.format("%Y/%m/%d").parse
-
+	var parse_date = d3.time.format("%Y/%m/%d").parse
 	
     // variables to store data
     var data = coin;
@@ -299,87 +198,77 @@ function updateLine(coin){
 
 	// push date to right list
 	data.forEach(function(d){ 
-		var date = parseDate(d.date);
-		// console.log(date);
+		
+		var date = parse_date(d.date);
 		low_price.push({date: date, price: d.low});
 		high_price.push({date: date, price: d.high});
 		market_cap.push({date: date, price: d.market_cap})
 		volume.push({date: date, price: d.volume})
+		
 		});
 
-	// zLine = d3.scale.category20();
-
-	// save data in right form
-	// var good_data = [{id: "low", values: volume }, {id: "high", values: high_price }];
 	// if statement to determine which scale the user selected
 	if (scale == "linear") {
 
 		// change all variables if scale is changed
-		yLine = d3.scale.linear().range([heightLine, 0]);
+		y_line = d3.scale.linear().range([height_line, 0]);
 		var good_data = [{id: "high", values: high_price}];
-			yLine.domain([
+			y_line.domain([
 		d3.min(low_price, function(d){ return 0.75 * d.price}),
 		d3.max(low_price, function(d) { return 1.5 * d.price })]);
-		// zLine.domain([good_data[0].id]);
+		// z_line.domain([good_data[0].id]);
 
 	}
 
 	else {
 		
-		yLine = yLine = d3.scale.log().range([heightLine, 0]);
+		y_line = y_line = d3.scale.log().range([height_line, 0]);
 		var good_data = [{id: "high", values: high_price }, {id: "low", values: volume }];
-		yLine.domain([
+		y_line.domain([
 		d3.min(low_price, function(d){ return 0.75 * d.price}),
 		d3.max(volume, function(d) { return 1.25 * d.price })]);
-		// zLine.domain([good_data[0].id, good_data[1].id]);
+		// z_line.domain([good_data[0].id, good_data[1].id]);
 	};
 
 	// scaling the x-axis
-	xLine = d3.time.scale().range([0, widthLine]);
-	// yLine = d3.scale.log().range([heightLine, 0]);
+	x_line = d3.time.scale().range([0, width_line]);
 	
 	// determine domain of x axis
-	xLine.domain(d3.extent(low_price, function(d) { return d.date } ));
-	// yLine.domain([
-	// 	d3.min(low_price, function(d){ return 0.75 * d.price}),
-	// 	d3.max(volume, function(d) { return 1.25 * d.price })]);
-
+	x_line.domain(d3.extent(low_price, function(d) { return d.date } ));
+	
 	// select x axis to update this axis
-	svgLine.select(".x")
+	svg_line.select(".x")
 		.transition()
 		.duration(800)
-		.call(d3.svg.axis().scale(xLine).orient("bottom"));
+		.call(d3.svg.axis().scale(x_line).orient("bottom"));
 
 	// select y axis to update this axis
-	svgLine.select(".y")
+	svg_line.select(".y")
 		.transition()
 		.duration(800)
-		.call(d3.svg.axis().scale(yLine).orient("left"));
+		.call(d3.svg.axis().scale(y_line).orient("left"));
 
 	// append x axis title
-	svgLine.select(".x")
+	svg_line.select(".x")
 		.select("text").text("Date");
 
 	// append y axis title
-	svgLine.select(".y")
+	svg_line.select(".y")
 		.select("text").transition().duration(750).text("($)");
-
-	// zLine.domain([good_data[0].id, good_data[1].id]);
-
 
 	// variables to draw lines 
   	var line = d3.svg.line()
-	    .x(function(d) { return xLine(d.date); })
-	    .y(function(d) { return yLine(d.price); });
+	    .x(function(d) { return x_line(d.date); })
+	    .y(function(d) { return y_line(d.price); });
 
 	// set color for the lines
-	var lineColor = ["slategray", "black"]
+	var line_color = ["slategray", "black"]
 
 	// select new data 
-	var punt = svgLine.selectAll(".point").data(good_data)
+	var punt = svg_line.selectAll(".point").data(good_data)
 
 	// remove the old line
-	svgLine.selectAll(".line").remove();
+	svg_line.selectAll(".line").remove();
 
 	punt.exit().remove()
 		.transition()
@@ -389,33 +278,33 @@ function updateLine(coin){
 	punt.enter().append("path")
 		.attr("class", "line")
     	.attr("d", function(d) { return line(d.values); })
-    	// .style("stroke", function(d) { return zLine(d.id); })
-    	.style("stroke", function(d, i) { return lineColor[i]; })
+    	// .style("stroke", function(d) { return z_line(d.id); })
+    	.style("stroke", function(d, i) { return line_color[i]; })
     	.style("fill", "none");
 
    	// append text to graph 
-   	svgLine.selectAll(".text").remove();
-    svgLine.append("text") 
+   	svg_line.selectAll(".text").remove();
+    svg_line.append("text") 
     		.attr("class", "text")     
-	        .attr("x", widthLine/1.6)
+	        .attr("x", width_line/1.6)
 	        .attr("y",  -10 )
 	        .style("text-anchor", "middle")
 	        .attr("font-size", "20px")
 	        .attr("text-decoration", "underline") 
 	        .text(title);
 
-	svgLine.append("text") 
+	svg_line.append("text") 
     		.attr("class", "legendLine")     
-	        .attr("x", widthLine/3)
+	        .attr("x", width_line/3)
 	        .attr("y",  525 )
 	        .style("text-anchor", "middle")
 	        .attr("font-size", "20px")
 	        .style("fill", "slategray")
 	        .text("Price ($)");
 
-	svgLine.append("text") 
+	svg_line.append("text") 
 		.attr("class", "legendLine")     
-        .attr("x", widthLine/7)
+        .attr("x", width_line/7)
         .attr("y",  525 )
         .style("text-anchor", "middle")
         .attr("font-size", "20px")
@@ -426,380 +315,334 @@ function updateLine(coin){
 
 function create_scatter(){
 
+	// determine parameters of scatter svg
 	var svg = d3.select("#scattersvg"),
 		margin = {top: 40, right: 90, bottom: 30, left: 50};
 		
-	widthScatter = $("#scattersvg").width() - margin.left - margin.right;
-	heightSCatter = $("#scattersvg").height() - margin.top - margin.bottom;
+	width_scatter = $("#scattersvg").width() - margin.left - margin.right;
+	height_scatter = $("#scattersvg").height() - margin.top - margin.bottom;
 
-	svgScatter = svg.append("g")
+	// append g element to svg
+	svg_scatter = svg.append("g")
 			.attr("class", "scatter")
 			.attr("transform", 
 				"translate(" + margin.left + "," + margin.top + ")");
 
-	// scaling the x and y axis
-	xScatter = d3.scale.log().range([0, widthScatter]);
-	yScatter = d3.scale.log().range([heightSCatter, 0]);
-	colorScatter = d3.scale.category20();
+	// scaling the x and y axis and scaling the color (same as donutchart)
+	x_scatter = d3.scale.log().range([0, width_scatter]);
+	y_scatter = d3.scale.log().range([height_scatter, 0]);
+	color_scatter = d3.scale.category20();
  
-	// append g class for x axis and append text
-	svgScatter.append('g')
-		.attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + heightSCatter + ')')
-    .append('text')
-        .attr('class', 'label')
-    	.attr('x', widthScatter-10)
-     	.attr('y', -7)
-     	.style('text-anchor', 'end')
+	// append x axis class and determine text position and style
+	svg_scatter.append("g")
+		.attr("class", "x axis")
+        .attr("transform", "translate(0," + height_scatter + ")")
+    .append("text")
+        .attr("class", "label")
+    	.attr("x", width_scatter-10)
+     	.attr("y", -7)
+     	.style("text-anchor", "end")
      	.style("font-weight", "bold");
 
-    // append g class for y axis and append text
-    svgScatter.append('g')
-    	.attr('class', 'y axis')
-    	.attr('transform', 'translate(10, 10)')
-    .append('text')
-    	.attr('class', 'label')
-    	.attr('transform', 'rotate(-90)')
-    	// .attr('transform', 'translate(100, 100)')
-    	.attr('y', 10)
+    // append y axis class and determine text position and style
+    svg_scatter.append("g")
+    	.attr('class', "y axis")
+    	.attr("transform", "translate(10, 10)")
+    .append("text")
+    	.attr("class", "label")
+    	.attr("transform", "rotate(-90)")
+    	.attr("y", 10)
     	.attr("x", -50)
-    	.attr('dy', '.71em')
-    	.style('text-anchor', 'end')
+    	.attr("dy", ".71em")
+    	.style("text-anchor", "end")
     	.style("font-weight", "bold");
 
-    	updatescatterPlot();
+    	update_scatter();
 
 };
 
-function updatescatterPlot() {
+function update_scatter() {
 
-	var newCoinData = [];
+	// variable to store data
+	var newcoin_data = [];
 	
-	for (var i = 0; i < topSelect; i++){
-		newCoinData.push(coinData[i]);
+	// change size of data if needed
+	for (var i = 0; i < top_select; i++){
+		newcoin_data.push(coin_data[i]);
 
 	}
 	
-	// console.log(coinData, newCoinData);
+	// set x and y domain of scatterplot
+	x_scatter.domain(d3.extent(newcoin_data, function(d)
+		{ return Number(d[xvariable_scatter]); })).nice();
+	y_scatter.domain([
+		d3.min(newcoin_data, function(d){ return 0.75 * +d[yvariable_scatter]}),
+		d3.max(newcoin_data, function(d) { return 1.25 * +d[yvariable_scatter] })]);
 
-	// set x and y domain
-	xScatter.domain(d3.extent(newCoinData, function(d) { return Number(d[xvariableScatter]); })).nice();
-	// y.domain(d3.extent(coin, function(d) {console.log(d.market_cap_usd); return d.market_cap_usd; })).nice();
-	yScatter.domain([
-		d3.min(newCoinData, function(d){ return 0.75 * +d[yvariableScatter]}),
-		d3.max(newCoinData, function(d) { return 1.25 * +d[yvariableScatter] })]);
-    // create tooltip 
+	// set domain
+    color_scatter.domain()
 
-    colorScatter.domain()
-
-	svgScatter.select(".x")
+	// select x axis to change the axis
+	svg_scatter.select(".x")
 		.transition()
 		.duration(800)
-		.call(d3.svg.axis().scale(xScatter).orient("bottom"));
+		.call(d3.svg.axis().scale(x_scatter).orient("bottom"));
 
-	svgScatter.select(".y")
+	// select y axis to change the axis
+	svg_scatter.select(".y")
 		.transition()
 		.duration(800)
-		.call(d3.svg.axis().scale(yScatter).orient("left"));
+		.call(d3.svg.axis().scale(y_scatter).orient("left"));
 
-	svgScatter.select(".x")
+	// select x axis and apply title to axis 
+	svg_scatter.select(".x")
 		.select("text").text(x_title);
 
-	svgScatter.select(".y")
+	// select y axis and apply title to axis
+	svg_scatter.select(".y")
 		.select("text").transition().duration(750).text(y_title);
 
-	tooltipScatter = d3.select("body").append("div")
+	// create tooltip 
+	tooltip_scatter = d3.select("body").append("div")
 	.attr("class", "tooltip")
 	.style("opacity", 0);
 
 
-	// plot circles in scatterplot with right dimensions
-	var circles = svgScatter.selectAll(".dot")
-		.data(newCoinData);
+	// select dots and update data
+	var circles = svg_scatter.selectAll(".dot")
+		.data(newcoin_data);
 
+	// remove the old data 
 	circles.exit().remove()
 		.transition()
 		.duration(800);
 
+	// change circle positions in scatterplot
 	circles
 		.transition()
 		.duration(800)
-		.attr("cx", function(d) { return xScatter(+d[xvariableScatter]); })
-      	.attr("cy", function(d) { return yScatter(+d[yvariableScatter]); })
-      	.style("fill", function(d) { return colorScatter(d.symbol); });
+		.attr("cx", function(d) { return x_scatter(+d[xvariable_scatter]); })
+      	.attr("cy", function(d) { return y_scatter(+d[yvariable_scatter]); })
+      	.style("fill", function(d) { return color_scatter(d.symbol); });
 
+	// append new data to circles and create them
 	circles.enter().append("circle")
 		.transition()
 		.duration(800)
 	    .attr("class", function(d){ return "dot " + d.id;})
 	    .attr("id", function(d){ return d.id;})
-	    // .classed(function(d){ return d.id;},)
 	    .attr("r", 10)
-	    .attr("cx", function(d) { return xScatter(+d[xvariableScatter]); })
-      	.attr("cy", function(d) { return yScatter(+d[yvariableScatter]); })
-      	.style("fill", function(d) { return colorScatter(d.symbol); })
+	    .attr("cx", function(d) { return x_scatter(+d[xvariable_scatter]); })
+      	.attr("cy", function(d) { return y_scatter(+d[yvariable_scatter]); })
+      	.style("fill", function(d) { return color_scatter(d.symbol); })
       	.style("stroke", "black")
       	.style("stroke-width", "2.5px");
       	
 
-      	circles.on("mouseover", function(d) {
-        	tooltipScatter.transition()
-            	.duration(200)
-            	.style("opacity", .9)
-            tooltipScatter.html(d.name + "<br>" + x_title + ":" +d[xvariableScatter] + "<br>" + y_title + ":" +d[yvariableScatter])
-            	.style("display", "inline-block")
-            	.style("left", (d3.event.pageX + 20) + "px")
-            	.style("top", (d3.event.pageY - 28) + "px");
+  	// apply tooltip to scatterdots when hovering over them
+  	circles.on("mouseover", function(d) {
+    	tooltip_scatter.transition()
+        	.duration(200)
+        	.style("opacity", .9)
+        tooltip_scatter.html(d.name + "<br>" + x_title + ":" +d[xvariable_scatter]
+        	+ "<br>" + y_title + ":" +d[yvariable_scatter])
+        	.style("display", "inline-block")
+        	.style("left", (d3.event.pageX + 20) + "px")
+        	.style("top", (d3.event.pageY - 28) + "px");
 
+		// change opacity of other dots
+		var self = this
+		d3.selectAll(".dot").filter(function(x) { return self != this})
+		.style("opacity", .2);
 
+		// change stroke of donutchart when hovering over dots
+		var id = this["id"]
+		svg_donut.selectAll("#"+id).style("stroke", "black")
+			.style("stroke-width", "2.5px");
 
-			var self = this
-			d3.selectAll(".dot").filter(function(x) { return self != this})
-			.style("opacity", .2);
+	})
+	.on("mouseout", function(d) {
+	    tooltip_scatter.transition()
+        	.duration(500)
+        	.style("opacity", 0);
+        	d3.selectAll(".dot").style("opacity", 1);
+        	
+        	var id = this["id"]
+			svg_donut.selectAll("#"+id).style("stroke", "white");
 
-			var id = this["id"]
-			svgDonut.selectAll("#"+id).style("stroke", "black").style("stroke-width", "2.5px");
+	});	
 
-		})
-		.on("mouseout", function(d) {
-		    tooltipScatter.transition()
-            	.duration(500)
-            	.style("opacity", 0);
-            	d3.selectAll(".dot").style("opacity", 1);
-            	var id = this["id"]
-				svgDonut.selectAll("#"+id).style("stroke", "white");
-
-
-		});	
-
-		circles.on("click", function(d) {
-			clickDonut(d.name);
-		});
-
-		// circles.on("mouseover", function(d){
-				
-
-		// 	var self = this
-		// 	d3.selectAll(".dot").filter(function(x) { return self != this})
-		// 	.style("opacity", .2)
-
-		// });
+	// apply on click function on dots in order to update linegraph
+	circles.on("click", function(d) {
+		clickDonut(d.name);
 	
-													
-	// append legend to svg 
-	var legend = svgScatter.selectAll(".legend")
-				.data(colorScatter.domain())
+	});
+												
+	// create variable to append legend  
+	var legend = svg_scatter.selectAll(".legend")
+				.data(color_scatter.domain())
 			.enter().append("g")
 			    .attr("class", "legend")
-			    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+			    .attr("transform", function(d, i) 
+			    	{ return "translate(0," + i * 20 + ")"; });
 
+	// append rectangles to legend on right position
 	legend.append("rect")
-		.attr("x", widthScatter + 70)
+		.attr("x", width_scatter + 70)
 		.attr("y", 44)
 		.attr("width", 17)
 		.attr("height", 17)
-		.style("fill", colorScatter)
+		.style("fill", color_scatter)
 		.style("stroke","black");
 
+	// append text to legend on right position
 	legend.append("text")
-		.attr("x", widthScatter + 63)
+		.attr("x", width_scatter + 63)
 		.attr("y", 50)
 		.attr("dy", ".35em")
 		.style("text-anchor", "end")
 		.text(function(d) { return d; });	
 
-	console.log("hoi");
 };
 
 function create_donut(){
 
-	widthDonut = $("#donutsvg").width();
-	heightDonut = $("#donutsvg").height();
-	radiusDonut = Math.min(widthDonut, heightDonut) / 2;
+	// determine parameters of donutchart
+	width_donut = $("#donutsvg").width();
+	height_donut = $("#donutsvg").height();
+	radius_donut = Math.min(width_donut, height_donut) / 2;
 
-	colorDonut = d3.scale.category20();
+	// set colors of donutchart (same as scatterplot)
+	color_donut = d3.scale.category20();
 
-	 // create tooltip 
-    tooltipDonut = d3.select("body").append("div")
+	// create tooltip 
+    tooltip_donut = d3.select("body").append("div")
 		.attr("class", "tooltip")
 		.style("opacity", 0);
 
+	// create svg
 	var svg = d3.select("#donutsvg")
-    	.attr("width", widthDonut)
-    	.attr("height", heightDonut)
+    	.attr("width", width_donut)
+    	.attr("height", height_donut)
   	.append("g")
-    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
+    	.attr("transform", "translate(" + width_donut / 2 + "," 
+    		+ height_donut / 2 + ")");
 
-    arcDonut = d3.svg.arc()
-		.outerRadius(radiusDonut - 10)
-		.innerRadius(radiusDonut - 70);
+    // determine inner and outer radius
+    arc_donut = d3.svg.arc()
+		.outerRadius(radius_donut - 10)
+		.innerRadius(radius_donut - 70);
 
-	pieDonut = d3.layout.pie()
+	// select which data to show 
+	pie_donut = d3.layout.pie()
 		.sort(null)
 		.value(function(d) { return d.market_cap_usd;});
-
-  //   // vanaf hier in update functie?
-  // svgDonut = svg.selectAll(".arc")
-  //   	.data(pieDonut(coinData))
-  //   	.enter()
-  //   	.append("g")
-  //     	.attr("class", "arc");
-
-  // 	svgDonut.append("path")
-  //   	.attr("d", arcDonut)
-  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
-  //     	.on("mouseover", function(d) {
-  //       	tooltipDonut.transition()
-  //           	.duration(200)
-  //           	.style("opacity", .9)
-  //           tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
-  //           	.style("display", "inline-block")
-  //           	.style("left", (d3.event.pageX + 20) + "px")
-  //           	.style("top", (d3.event.pageY - 28) + "px");
-		// })
-		// .on("mouseout", function(d) {
-		//     tooltipDonut.transition()
-  //           	.duration(500)
-  //           	.style("opacity", 0);
-		// });
-
-	
-
-	updateDonut();
-  	// svgScatter.append("text")
-   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-   //    	.attr("dy", ".35em")
-   //    	.text(function(d) { return d.data.symbol; });
+ 
+	update_donut();
 
 };
 
-function updateDonut(){
+function update_donut(){
 
-	var newCoinData = [];
+	// variables to store new data
+	var newcoin_data = [];
 	var total_cap = 0;
 	
-	for (var i = 0; i < topSelect; i++){
-		newCoinData.push(coinData[i]);
-		total_cap +=  Number(newCoinData[i].market_cap_usd)
-		
+	// change size of data if user wants to view more/less coins
+	for (var i = 0; i < top_select; i++){
+		newcoin_data.push(coin_data[i]);
+		total_cap +=  Number(newcoin_data[i].market_cap_usd)
 	}
 
-	// // create tooltip 
-  //tooltipDonut = d3.select("body").append("div")
-		// .attr("class", "tooltip")
-		// .style("opacity", 0);
-	
-	// console.log(newCoinData[0].market_cap_usd);
-	
-
-
-    svgDonut = d3.select("#donutsvg").attr("width", widthDonut)
-    	.attr("height", heightDonut);
-  	svgDonut = svgDonut.select("g")
-    	.attr("transform", "translate(" + widthDonut / 2 + "," + heightDonut / 2 + ")");
+    // select svg to apply changes
+    svg_donut = d3.select("#donutsvg").attr("width", width_donut)
+			.attr("height", height_donut);
+  	svg_donut = svg_donut.select("g")
+			.attr("transform", "translate(" + width_donut / 2 + ","
+				+ height_donut / 2 + ")");
     
-    var pieces = svgDonut.selectAll(".arc")
-    	.data(pieDonut(newCoinData));
+    // new variable to store new data
+    var pieces = svg_donut.selectAll(".arc")
+    	.data(pie_donut(newcoin_data));
 
     // pieces.selectAll(".path").remove();
 
+    // remove old data
     pieces.exit().remove()
     	.transition()
     	.duration(750);
 
+  	// append new path when graph needs to be updated
   	pieces.enter().append("path")
-    	.attr("d", arcDonut)
+    	.attr("d", arc_donut)
     	.attr("id",function(d){ return d.data.id;})
     	.style("fill", "lightgrey")
     	.transition()
     	.duration(1500)
-      	.style("fill", function(d) { return colorDonut(d.data.symbol); })
+      	.style("fill", function(d) { return color_donut(d.data.symbol); })
       	.style("stroke", "white")
       	.style("stroke-width", "2.5px");
       	
-      pieces.on("mouseover", function(d) {
-        	tooltipDonut.transition()
-            	.duration(200)
-            	.style("opacity", .9)
-            tooltipDonut.html(d.data.name +  "<br>" + "Marketcap ($):" + +d.data.market_cap_usd + "<br>" + "% of top " + topSelect + ": " +((d.data.market_cap_usd/total_cap)*100))
-            	.style("display", "inline-block")
-            	.style("left", (d3.event.pageX + 20) + "px")
-            	.style("top", (d3.event.pageY - 28) + "px");
-            	var id = this["id"]
-				svgScatter.selectAll("#"+id).style("stroke", "red");
+    // apply tooltip on pieces of donutchart and make sure user can hover 
+    // over the pieces in order to change stroke of dots in scatterplot
+  	pieces.on("mouseover", function(d) {
+    	tooltip_donut.transition()
+        	.duration(200)
+        	.style("opacity", .9)
+        tooltip_donut.html(d.data.name +  "<br>" + "Marketcap ($):" + 
+        		+d.data.market_cap_usd + "<br>" + "% of top " + top_select + ": " 
+        		+((d.data.market_cap_usd/total_cap)*100))
+        			.style("display", "inline-block")
+        			.style("left", (d3.event.pageX + 20) + "px")
+        			.style("top", (d3.event.pageY - 28) + "px");
+        	
+        	// change stroke of scatterdots when hovering over donutchart
+        	var id = this["id"]
+			svg_scatter.selectAll("#"+id).style("stroke", "red");
 		})
 		.on("mouseout", function(d) {
-		    tooltipDonut.transition()
+		    tooltip_donut.transition()
             	.duration(500)
             	.style("opacity", 0);
-            	var id = this["id"]
-				svgScatter.selectAll("#"+id).style("stroke", "black");
-
+            	
+ 			// change stroke of scatterdots back to normal
+        	var id = this["id"]
+			svg_scatter.selectAll("#"+id).style("stroke", "black");
 		});
 
+		// make sure pieces are clickable in order to update linegraph
 		pieces.on("click", function(d) {
 			clickDonut(d.data.name);
 		});
 
-
-		svgDonut.selectAll(".text").remove();
-    	svgDonut.append("text") 
+		// select text and remove old text
+		svg_donut.selectAll(".text").remove();
+    	
+    	// append new text to donutchart when updated
+    	svg_donut.append("text") 
     		.attr("class", "text")     
-	        .attr("x", widthDonut /4)
-	        .attr("y",  heightDonut/50 )
+	        .attr("x", width_donut /4)
+	        .attr("y",  height_donut/50 )
 	        .style("text-anchor", "end")
 	        .attr("font-size", "10px")
 	        .attr("font-weight", "bold")
 	        .attr("text-decoration", "underline") 
-	        .text("Total marketcap of top" + " " + topSelect + ":" + " " + total_cap);
-
-
-  // 	var pieces = svgDonut.selectAll(".arc")
-  //   	.data(pieDonut(newCoinData));
-
-  //   pieces.exit().remove()
-  //   	.transition()
-  //   	.duration(750);
-
-  // 	pieces.enter().append("path")
-  //   	.attr("d", arcDonut)
-  //     	.style("fill", function(d) { return colorDonut(d.data.symbol); })
-      	
-  //   pieces.on("mouseover", function(d) {
-  //   	tooltipDonut.transition()
-  //       .duration(200)
-  //           .style("opacity", .9)
-  //       tooltipDonut.html(d.data.name+ " " + "<br>" +d.data.market_cap_usd)
-  //           .style("display", "inline-block")
-  //           .style("left", (d3.event.pageX + 20) + "px")
-  //           .style("top", (d3.event.pageY - 28) + "px");
-		// })
-		// .on("mouseout", function(d) {
-		//     tooltipDonut.transition()
-  //           	.duration(500)
-  //           	.style("opacity", 0);
-		// });
-
-
-  	// svgScatter.append("text")
-   //  	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-   //    	.attr("dy", ".35em")
-   //    	.text(function(d) { return d.data.symbol; });
+	        .text("Total marketcap of top" + " " + top_select + ":" + " "
+	        + total_cap);
 
 };
 
 function clickDonut(currency){
 
 	// check if variable is in list of currencies
-	var a = lineVariable.indexOf(currency);
+	var a = line_variable.indexOf(currency);
 
 	// if variable is in list, change data to update linegraph
 	if ( a != -1 ){
 		title = currency;
 		selector = a;
-		console.log(a, lineData[a]);
-		updateLine(lineData[a]);
-		$('html, body').animate({ scrollTop: 0 }, 'slow');
+		update_line(line_data[a]);
+		$("html, body").animate({ scrollTop: 0 }, "slow");
 	
 	}
 	// show alert message if there is no data of the desired currency
