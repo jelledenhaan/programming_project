@@ -3,11 +3,12 @@
   11975458
   index.html
   This is the html script which loads project.js.
-  The html page shows three different graphs showing data about cryptocurrencies
+  The html page shows three different graphs showing data about cryptocurrency
 -->
 <html>
   <head>
   	<title>Programming project</title>
+       <!-- loading in all the scripts and libraries -->
       <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
       <script src="https://d3js.org/queue.v1.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -22,20 +23,20 @@
         <div class="container">
           <h1>Cryptocurrencies</h1>      
           <p>Historical data and current data about cryptocurrency</p>
-        <!-- Button to Open the Modal -->
+          <!-- button to open the modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
               Information
             </button>
-            <!-- The Modal -->
+            <!-- the modal -->
             <div class="modal fade" id="myModal">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">          
-                  <!-- Modal Header -->
+                  <!-- modal header -->
                   <div class="modal-header">
                     <h4 class="modal-title">General information and usage manual</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                   </div>
-                  <!-- Modal body -->
+                  <!-- modal body -->
                   <div class="modal-body">
                   <h1>The goal of this page</h1>
                   <p class="text-left"> Welcome to this webpage about cryptocurrency. On this webpage historical and current data about
@@ -64,7 +65,7 @@
                   </p>
                   <p class="text-left">Note: There is not historical data available for every coin</p>
                   </div>
-                  <!-- Modal footer -->
+                  <!-- modal footer -->
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
@@ -74,6 +75,7 @@
         </div>
       </div>
       <div class="btn-group container-fluid">
+        <!-- dropdown menu to select the cryptocoin -->
         <div class="dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Select cryptocoin
@@ -92,6 +94,7 @@
             </div>
           </div>
         <div class="dropdown">
+          <!-- dropdown menu to select the scale -->
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Select scale type
           </button>
@@ -101,15 +104,18 @@
             </div>
         </div>
       </div>
+    <!-- container to store the svg of the linegraph -->
     <div class="container-fluid">
       <div class="row">
           <div class="col-lg-12" style="background-color:lightgrey">
+              <!-- svg for the linegraph -->
               <svg width="100%" height="650" id="linesvg">
                 <text x="750" y="30" font-family="arial" font-size="20px" text-anchor="end" font-weight="bold" fill="black">Historical top 10 currencies</text>
               </svg>
           </div>
     </div>
        <div class="btn-group container-fluid">
+        <!-- dropdown menu to select the amount of coins to show -->
         <div class="dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Choose selection
@@ -121,6 +127,7 @@
               <a class="dropdown-item top-btn" name="20" href="#bottom">Top 20 coins</a>
             </div>
           </div>
+        <!-- dropdown menu to select the x variable -->
         <div class="dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Select x axis variable
@@ -133,6 +140,7 @@
             </div>
         </div>
         <div class="dropdown">
+          <!-- dropdown menu to select the y variable -->
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             Select y axis variable
           </button>
@@ -144,6 +152,7 @@
             </div>
           </div>
         </div>
+    <!-- container which contains the scatter and donutsvg -->
     <div class="container-fluid">
       <div class="row">
           <div class="col-lg-8" style="background-color:lightgrey">
