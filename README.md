@@ -3,6 +3,9 @@
 
 https://jelledenhaan.github.io/programming_project/src/index.html
 
+## Link to Youtube Video
+https://youtu.be/iRr7SglJhj8
+
 ## Problem statement
 
 Cryptocurrency is getting more and more popular. However, many people do not know any other crypto coins besides the Bitcoin. With this website, people can get in touch with some other popular crypto coins and their characteristics. The user will be able to view different kind of characteristics of crypto coins. Furthermore, the user is able to change the number of coins that will be shown. 
